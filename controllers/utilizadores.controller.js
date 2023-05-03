@@ -3,9 +3,9 @@ const User = db.users;
 // Create and Save a new Tutorial: use object.save()
 exports.create = async (req, res) => {
   const user = new User({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published,
+    nome: req.body.nome,
+    password: req.body.password,
+    email: req.body.email,
   });
   try {
     let newUser = await user.save();
