@@ -15,7 +15,7 @@ router.use((req, res, next) => {
   next();
 });
 router
-  .route("/")
+  .route("/utilizadores")
   .post(userController.create);
 
 

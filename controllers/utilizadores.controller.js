@@ -2,10 +2,19 @@ const db = require("../models");
 const User = db.users;
 // Create and Save a new Tutorial: use object.save()
 exports.create = async (req, res) => {
+  let referralCode = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < 6; i++) {
+    referralCode += characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
+  }
   const user = new User({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published,
+    nome: req.body.nome,
+    password: req.body.password,
+    email: req.body.email,
+    referral: referralCode,
   });
   try {
     let newUser = await user.save();
@@ -27,3 +36,16 @@ exports.create = async (req, res) => {
     });
   }
 };
+
+/* // get all users
+exports.findAll = async (req, res) => {
+  try {
+    let data = await User.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({
+      sucess: false,
+      message: err.message || "Some error occurred while retrieving users",
+    });
+  }
+} */
