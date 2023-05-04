@@ -2,10 +2,19 @@ const db = require("../models");
 const User = db.users;
 // Create and Save a new Tutorial: use object.save()
 exports.create = async (req, res) => {
+  let referralCode = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < 6; i++) {
+    referralCode += characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
+  }
   const user = new User({
     nome: req.body.nome,
     password: req.body.password,
     email: req.body.email,
+    referral: referralCode,
   });
   try {
     let newUser = await user.save();

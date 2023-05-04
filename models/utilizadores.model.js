@@ -10,9 +10,9 @@ module.exports = (mongoose) => {
       moedas: { type: Number, default: 0 },
       numUsoEcopontos: { type: Number, default: 0 },
       ecopontosRegistados: { type: Number, default: 0 },
-      biografia: String,
+      biografia: {type: String,default: ""},
       badges: [],
-      referral: String,
+      referral:{type: String, default: ""}
     },
     { timestamps: false }
   );
