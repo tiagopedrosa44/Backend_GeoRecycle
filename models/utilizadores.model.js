@@ -8,7 +8,7 @@ module.exports = (mongoose) => {
       pontos: { type: Number, default: 0 },
       nivel: { type: Number, default: 0 },
       moedas: { type: Number, default: 0 },
-      utilizacoes: { type: Number, default: 0 },
+      numUsoEcopontos: { type: Number, default: 0 },
       ecopontosRegistados: { type: Number, default: 0 },
       biografia: String,
       badges: [],
@@ -19,3 +19,5 @@ module.exports = (mongoose) => {
   const User = mongoose.model("User", schema);
   return User;
 };
+
+

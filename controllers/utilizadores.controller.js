@@ -27,3 +27,16 @@ exports.create = async (req, res) => {
     });
   }
 };
+
+/* // get all users
+exports.findAll = async (req, res) => {
+  try {
+    let data = await User.find({});
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({
+      sucess: false,
+      message: err.message || "Some error occurred while retrieving users",
+    });
+  }
+} */
