@@ -1,5 +1,8 @@
 const db = require("../models");
 const User = db.users;
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 // Create and Save a new Tutorial: use object.save()
 exports.create = async (req, res) => {
   let referralCode = "";
@@ -12,7 +15,7 @@ exports.create = async (req, res) => {
   }
   const user = new User({
     nome: req.body.nome,
-    password: req.body.password,
+    password: bcrypt.hashSync(req.body.password, 10),
     email: req.body.email,
     referral: referralCode,
   });
