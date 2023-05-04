@@ -4,6 +4,7 @@ module.exports = (mongoose) => {
       tipo: { type: String, default: "user" },
       nome: { type: String, required: true },
       email: { type: String, required: true, unique: true },
+      foto: { type: String, default: "" },
       password: { type: String, required: true },
       pontos: { type: Number, default: 0 },
       nivel: { type: Number, default: 0 },
