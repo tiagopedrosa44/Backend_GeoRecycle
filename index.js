@@ -11,7 +11,7 @@ app.get("/", function (req, res) {
   res.status(200).json({ message: "GeoRecycle API" });
 });
 // routing middleware for resource Users
-app.use('/utilizadores', require('./routes/utilizadores.routes.js'))
+app.use('/georecycle', require('./routes/utilizadores.routes.js'))
 
 app.get("*", function (req, res) {
   res.status(404).json({ message: "WHAT???" });
