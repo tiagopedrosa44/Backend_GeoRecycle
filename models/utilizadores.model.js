@@ -13,7 +13,8 @@ module.exports = (mongoose) => {
       ecopontosRegistados: { type: Number, default: 0 },
       biografia: {type: String,default: ""},
       badges: [],
-      referral:{type: String, default: ""}
+      referral:{type: String, default: ""},
+      referredBy:{type: String, default: ""}
     },
     { timestamps: false }
   );

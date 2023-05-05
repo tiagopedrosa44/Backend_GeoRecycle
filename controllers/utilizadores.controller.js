@@ -3,8 +3,10 @@ const User = db.users;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Create and Save a new Tutorial: use object.save()
+// Create and Save a new User: use object.save()
 exports.create = async (req, res) => {
+  const referalPoints = 100;
+  const referalCoins = 100;
   let referralCode = "";
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -18,13 +20,27 @@ exports.create = async (req, res) => {
     password: bcrypt.hashSync(req.body.password, 10),
     email: req.body.email,
     referral: referralCode,
+    referredBy: req.body.referredBy,
   });
   try {
     let newUser = await user.save();
+    if (newUser.referredBy) {
+      const referringUser = await User.findOne({
+        referral: newUser.referredBy,
+      }).exec();
+      if (referringUser) {
+        referringUser.pontos += referalPoints;
+        referringUser.moedas += referalCoins;
+        await referringUser.save();
+        newUser.pontos += referalPoints;
+        newUser.moedas += referalCoins;
+        await newUser.save();
+      }
+    }
     res.status(201).json({
       sucess: true,
       message: "New user created",
-      URL: "/users/" + newUser._id,
+      URL: "/utilizadores/" + newUser._id,
     });
   } catch (err) {
     if (err.name === "ValidationError") {
@@ -32,11 +48,14 @@ exports.create = async (req, res) => {
       Object.keys(err.errors).forEach((key) => {
         errors[key] = err.errors[key].message;
       });
+      res.status(400).json({ sucess: false, message: errors });
+    } else {
+      res.status(500).json({
+        sucess: false,
+        message:
+          err.message || "Ocorreu um erro ao criar o utilizador.",
+      });
     }
-    res.status(500).json({
-      sucess: false,
-      message: err.message || "Some error occurred while creating the tutorial",
-    });
   }
 };
 
