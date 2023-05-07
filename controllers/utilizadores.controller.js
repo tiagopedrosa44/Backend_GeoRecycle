@@ -7,13 +7,18 @@ const jwt = require("jsonwebtoken");
 exports.create = async (req, res) => {
   const referalPoints = 100;
   const referalCoins = 100;
-  let referralCode = "";
+  let referralCode;
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (let i = 0; i < 6; i++) {
-    referralCode += characters.charAt(
-      Math.floor(Math.random() * characters.length)
-    );
+  while (!referralCode) {
+    let code = "";
+    for (let i = 0; i < 6; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    const existingUser = await User.findOne({ referral: code }).exec();
+    if (!existingUser) {
+      referralCode = code;
+    }
   }
   const user = new User({
     nome: req.body.nome,
@@ -24,9 +29,9 @@ exports.create = async (req, res) => {
   });
   try {
     let newUser = await user.save();
-    if (newUser.referredBy) {
+    if (req.body.referredBy) {
       const referringUser = await User.findOne({
-        referral: newUser.referredBy,
+        referral: req.body.referredBy,
       }).exec();
       if (referringUser) {
         referringUser.pontos += referalPoints;
@@ -34,6 +39,7 @@ exports.create = async (req, res) => {
         await referringUser.save();
         newUser.pontos += referalPoints;
         newUser.moedas += referalCoins;
+        newUser.referredBy = referringUser._id;
         await newUser.save();
       }
     }
@@ -52,8 +58,7 @@ exports.create = async (req, res) => {
     } else {
       res.status(500).json({
         sucess: false,
-        message:
-          err.message || "Ocorreu um erro ao criar o utilizador.",
+        message: err.message || "Ocorreu um erro ao criar o utilizador.",
       });
     }
   }
