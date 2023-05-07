@@ -14,7 +14,7 @@ module.exports = (mongoose) => {
       biografia: {type: String,default: ""},
       badges: [],
       referral:{type: String, default: ""},
-      referredBy: { type: mongoose.Schema.Types.ObjectId, ref: "users"} 
+      referredBy: {type: String, default: ""}
     },
     { timestamps: false }
   );

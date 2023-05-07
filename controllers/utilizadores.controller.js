@@ -20,6 +20,8 @@ exports.create = async (req, res) => {
       referralCode = code;
     }
   }
+
+
   const user = new User({
     nome: req.body.nome,
     password: bcrypt.hashSync(req.body.password, 10),
@@ -29,9 +31,9 @@ exports.create = async (req, res) => {
   });
   try {
     let newUser = await user.save();
-    if (req.body.referredBy) {
+    if (newUser.referredBy) {
       const referringUser = await User.findOne({
-        referral: req.body.referredBy,
+        referral: newUser.referredBy,
       }).exec();
       if (referringUser) {
         referringUser.pontos += referalPoints;
@@ -39,7 +41,6 @@ exports.create = async (req, res) => {
         await referringUser.save();
         newUser.pontos += referalPoints;
         newUser.moedas += referalCoins;
-        newUser.referredBy = referringUser._id;
         await newUser.save();
       }
     }
@@ -54,15 +55,35 @@ exports.create = async (req, res) => {
       Object.keys(err.errors).forEach((key) => {
         errors[key] = err.errors[key].message;
       });
-      res.status(400).json({ sucess: false, message: errors });
+      // Verificar se o nome de usuário foi fornecido
+      if (!req.body.nome) {
+        errors["nome"] = "Indique um nome de utilizador";
+      }
+      // Verificar se a senha foi fornecida
+      if (!req.body.password) {
+        errors["password"] = "Indique uma palavra-passe";
+      }
+   
+      // Verificar se o email foi fornecido
+      if (!req.body.email) {
+        errors["email"] = "Indique um email";
+      }
+      const existingUser = await User.findOne({ email: req.body.email }).exec();
+      if (existingUser) {
+        errors["email duplicado"] = "Email já existe";
+      }
+      res.status(400).json({ success: false, message: errors });
     } else {
       res.status(500).json({
-        sucess: false,
-        message: err.message || "Ocorreu um erro ao criar o utilizador.",
+        success: false,
+        message:
+          err.message || "Some error occurred while creating the tutorial",
       });
     }
   }
 };
+
+
 
 /* // get all users
 exports.findAll = async (req, res) => {
