@@ -1,6 +1,7 @@
 const express = require("express");
 let router = express.Router();
 const userController = require("../controllers/utilizadores.controller");
+const authController = require("../controllers/auth.controller");
 
 // middleware for all routes related with tutorials
 router.use((req, res, next) => {
@@ -14,12 +15,18 @@ router.use((req, res, next) => {
   });
   next();
 });
+// ROUTES
+router 
+  .route("/")
+  .get(authController.verifyToken,userController.getAllUsers)
 router
-  .route("/utilizadores")
+  .route("/registo")
   .post(userController.create);
+router
+  .route("/login")
+  .post(userController.login);
 
 
-//send a predefined error message for invalid routes on TUTORIALS
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
 });
