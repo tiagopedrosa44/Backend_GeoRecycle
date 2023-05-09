@@ -13,4 +13,5 @@ db.mongoose
     process.exit();
   });
 db.users = require("./utilizadores.model.js")(mongoose);
+db.ecopontos = require("./ecopontos.model.js")(mongoose);
 module.exports = db;

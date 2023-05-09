@@ -12,7 +12,7 @@ app.get("/", function (req, res) {
 });
 // routing middleware for resource Users
 app.use('/utilizadores', require('./routes/utilizadores.routes.js'))
-
+app.use('/ecopontos', require('./routes/ecopontos.routes.js'))
 app.get("*", function (req, res) {
   res.status(404).json({ message: "WHAT???" });
 });
