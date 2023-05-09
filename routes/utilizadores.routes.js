@@ -28,6 +28,8 @@ router
 router
   .route("/:id")
   .patch(authController.verifyToken,userController.updateUserById)
+  .get(authController.verifyToken,userController.getUser);
+
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
