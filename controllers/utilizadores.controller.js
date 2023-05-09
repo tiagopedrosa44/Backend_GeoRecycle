@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/db.config.js");
 
-// Create and Save a new User: use object.save()
+// CRIAR CONTA
 exports.create = async (req, res) => {
   const referalPoints = 100;
   const referalCoins = 100;
@@ -90,7 +90,7 @@ exports.create = async (req, res) => {
   }
 };
 
-
+// ROTA FAZER LOGIN
 exports.login = async (req, res) => {
   try {
     if (!req.body || !req.body.nome || !req.body.password)
@@ -146,6 +146,8 @@ exports.login = async (req, res) => {
   }
 };
 
+
+// ROTA PARA VER TODOS OS UTILIZADORES
 exports.getAllUsers = async (req, res) => {
   try {
     if (req.loggedUserType !== "admin")
@@ -169,9 +171,7 @@ exports.getAllUsers = async (req, res) => {
 };
 
 
-
-
-
+// ROTA UPDATE DO USER POR ID
 exports.updateUserById = async (req, res) => {
   const userId = req.params.id;
   const { nome, email, password, biografia, foto } = req.body;
@@ -199,6 +199,7 @@ exports.updateUserById = async (req, res) => {
   }
 };
 
+// ROTA PARA VER UM UTILIZADOR POR ID
 exports.getUser = async (req, res) => {
   try {
     if (req.loggedUserId !== req.params.id && req.loggedUserType)
