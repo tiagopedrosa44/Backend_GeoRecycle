@@ -25,7 +25,9 @@ router
 router
   .route("/login")
   .post(userController.login);
-
+router
+  .route("/:id")
+  .patch(authController.verifyToken,userController.updateUserById)
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });

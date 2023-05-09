@@ -167,3 +167,34 @@ exports.getAllUsers = async (req, res) => {
     });
   };
 };
+
+
+
+
+
+exports.updateUserById = async (req, res) => {
+  const userId = req.params.id;
+  const { nome, email, password, biografia, foto } = req.body;
+
+  // Verifica se o ID do usuário na solicitação corresponde ao ID do usuário autenticado
+  if (userId !== req.loggedUserId) {
+    return res.status(403).json({ message: 'Não autorizado' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Utilizador não encontrado!" });
+    }
+    user.nome = nome;
+    user.email = email;
+    user.password = bcrypt.hashSync(password, 10);
+    user.biografia = biografia;
+    user.foto = foto;
+
+    await user.save();
+    res.status(200).json({ message: "Utilizador atualizado com sucesso!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
