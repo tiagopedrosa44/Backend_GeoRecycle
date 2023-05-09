@@ -25,6 +25,9 @@ router
 router
   .route("/login")
   .post(userController.login);
+router
+  .route("/:id")
+  .get(authController.verifyToken,userController.getUser);
 
 
 router.all("*", function (req, res) {

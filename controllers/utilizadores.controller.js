@@ -167,3 +167,28 @@ exports.getAllUsers = async (req, res) => {
     });
   };
 };
+
+exports.getUser = async (req, res) => {
+  try {
+    if (req.loggedUserId !== req.params.id && req.loggedUserType)
+      return res.status(403).json({
+        success: false,
+        msg: "Não tenho premissão para ver este utilizador."
+      });
+    let user = await User.findById(req.params.id,
+      "-password")
+    if (!user) return res.status(404).json({
+      success: false,
+      msg: "User not found"
+    });
+    res.status(200).json({
+      success: true,
+      user: user
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Some error occurred while retrieving user."
+    });
+  };
+}
