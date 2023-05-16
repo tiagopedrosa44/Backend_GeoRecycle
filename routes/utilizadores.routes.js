@@ -28,7 +28,8 @@ router
 router
   .route("/:id")
   .patch(authController.verifyToken,userController.updateUserById)
-  .get(authController.verifyToken,userController.getUser);
+  .get(authController.verifyToken,userController.getUser)
+  .delete(authController.verifyToken,userController.deleteUser);
 
 
 router.all("*", function (req, res) {

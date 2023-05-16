@@ -211,7 +211,7 @@ exports.getUser = async (req, res) => {
       "-password")
     if (!user) return res.status(404).json({
       success: false,
-      msg: "User not found"
+      msg: "Utilizador não encontrado"
     });
     res.status(200).json({
       success: true,
@@ -220,7 +220,33 @@ exports.getUser = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      msg: err.message || "Some error occurred while retrieving user."
+      msg: err.message || "Algo correu mal, tente novamente mais tarde."
+    });
+  };
+}
+
+
+// ROTA PARA APAGAR UM UTILIZADOR POR ID
+exports.deleteUser = async (req, res) => {
+  try {
+    if (req.loggedUserType !== "admin")
+      return res.status(403).json({
+        success: false,
+        msg: "Tem que estar autenticado como admin"
+      });
+    let user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({
+      success: false,
+      msg: "Este utilizador não existe"
+    });
+    res.status(200).json({
+      success: true,
+      msg: "Utilizador apagado com sucesso"
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde."
     });
   };
 }
