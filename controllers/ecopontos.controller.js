@@ -13,3 +13,24 @@ exports.findAll = async (req, res) => {
         });
     }
 };
+
+
+//VER ECOPONTO POR ID
+exports.getEcoponto = async (req, res) => {
+    try {
+        let ecoponto = await Ecoponto.findById(req.params.id)
+        if (!ecoponto) return res.status(404).json({
+            success: false,
+            msg: "Ecoponto não encontrado"
+        });
+        res.status(200).json({
+            success: true,
+            ecoponto: ecoponto
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            msg: err.message || "Algo correu mal, tente novamente mais tarde."
+        });
+    };
+}

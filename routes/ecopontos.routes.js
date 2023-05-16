@@ -17,14 +17,14 @@ router.use((req, res, next) => {
 });
 // ROUTES
 router
-    .route("/")
-    .get(authController.verifyToken,ecopontosController.findAll)
-/*     .post(authController.verifyToken,ecopontosController.createEcoponto);
+  .route("/")
+  .get(authController.verifyToken, ecopontosController.findAll)
+  //.post(authController.verifyToken, ecopontosController.createEcoponto);
 router
-    .route("/:id")
-    .patch(authController.verifyToken,ecopontosController.updateEcopontoById)
-    .get(authController.verifyToken,ecopontosController.getEcoponto);
- */
+  .route("/:id")
+  //.patch(authController.verifyToken, ecopontosController.updateEcopontoById)
+  .get(authController.verifyToken, ecopontosController.getEcoponto);
+
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
