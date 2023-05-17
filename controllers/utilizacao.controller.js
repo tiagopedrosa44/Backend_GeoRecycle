@@ -1,6 +1,7 @@
 const db = require("../models");
 const Utilizacao = db.utilizacaos;
 const User = db.users;
+const Ecoponto = db.ecopontos;
 const config = require("../config/db.config.js");
 
 
@@ -74,11 +75,13 @@ exports.validarUtilizacao = async (req, res) => {
         await utilizacao.save();
 
         if(utilizacao.ecopontoAprovado) {
+            const ecoponto = await Ecoponto.findById(utilizacao.idEcoponto);
             const user = await User.findById(utilizacao.idUser);
-            if(user) {
+            if(user && ecoponto) {
                 user.pontos += 100;
                 user.moedas += 500;
                 user.numUsoEcopontos+= 1;
+                ecoponto.utilizacoes += 1;
                 await user.save();
             }
         }
