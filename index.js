@@ -14,6 +14,7 @@ app.get("/", function (req, res) {
 app.use('/utilizadores', require('./routes/utilizadores.routes.js'))
 app.use('/ecopontos', require('./routes/ecopontos.routes.js'))
 app.use('/leaderboard', require('./routes/leaderboard.routes.js'))
+app.use('/utilizacao', require('./routes/utilizacao.routes.js'))
 app.get("*", function (req, res) {
   res.status(404).json({ message: "WHAT???" });
 });
