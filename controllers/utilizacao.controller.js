@@ -6,7 +6,7 @@ const config = require("../config/db.config.js");
 
 
 
-// Registrar utilização de ecoponto
+// Registar utilização de ecoponto
 exports.registarUtilizacao = async (req, res) => {
     try {
         let idEcoponto = req.params.id;
@@ -83,6 +83,7 @@ exports.validarUtilizacao = async (req, res) => {
                 user.numUsoEcopontos+= 1;
                 ecoponto.utilizacoes += 1;
                 await user.save();
+                await ecoponto.save();
             }
         }
         res.status(200).json({
