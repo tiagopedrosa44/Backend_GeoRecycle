@@ -19,6 +19,7 @@ router.use((req, res, next) => {
 router
     .route("/:id")
     .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
+    .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
 });
