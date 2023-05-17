@@ -1,6 +1,7 @@
 module.exports = (mongoose) => {
     const schema = mongoose.Schema(
         {
+            userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
             morada: { type: String, required: true },
             coordenadas: { type: Object, required: true },
             utilizacoes: { type: Number, default: 0 },

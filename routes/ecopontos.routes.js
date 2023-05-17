@@ -3,7 +3,7 @@ let router = express.Router();
 const ecopontosController = require("../controllers/ecopontos.controller");
 const authController = require("../controllers/auth.controller");
 
-// middleware for all routes related with tutorials
+// middleware for all routes related with ecopontos
 router.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
@@ -19,7 +19,7 @@ router.use((req, res, next) => {
 router
   .route("/")
   .get(authController.verifyToken, ecopontosController.findAll)
-  //.post(authController.verifyToken, ecopontosController.createEcoponto);
+  .post(authController.verifyToken, ecopontosController.createEcoponto);
 router
   .route("/:id")
   //.patch(authController.verifyToken, ecopontosController.updateEcopontoById)

@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
     }
     res.status(201).json({
       sucess: true,
-      message: "New user created",
+      message: "Utilizador criado com sucesso",
       URL: "/utilizadores/" + newUser._id,
     });
   } catch (err) {
@@ -59,7 +59,7 @@ exports.create = async (req, res) => {
       Object.keys(err.errors).forEach((key) => {
         errors[key] = err.errors[key].message;
       });
-      // Verificar se o nome de usuário foi fornecido
+      // Verificar se o nome de utilizador foi fornecido
       if (!req.body.nome) {
         errors["nome"] = "Indique um nome de utilizador";
       }
@@ -85,7 +85,7 @@ exports.create = async (req, res) => {
     } else {
       res.status(500).json({
         success: false,
-        message: err.message || "Some error occurred while creating the tutorial",
+        message: err.message || "Algo correu mal, tente novamente mais tarde.",
       });
     }
   }
@@ -141,7 +141,7 @@ exports.login = async (req, res) => {
     } else {
       res.status(500).json({
         success: false,
-        message: err.message || "Some error occurred while creating the tutorial",
+        message: err.message || "Algo correu mal, tente novamente mais tarde.",
       });
     }
   }
@@ -154,9 +154,8 @@ exports.getAllUsers = async (req, res) => {
     if (req.loggedUserType !== "admin")
       return res.status(403).json({
         success: false,
-        msg: "This request requires ADMIN role!"
+        msg: "Tem que estar autenticado como admin"
       });
-    // do not expose users' sensitive data
     let users = await User.find({},
       "-password")
     res.status(200).json({
@@ -166,7 +165,7 @@ exports.getAllUsers = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      msg: err.message || "Some error occurred while retrieving all users."
+      msg: err.message || "Algo correu mal, tente novamente mais tarde."
     });
   };
 };
@@ -177,7 +176,7 @@ exports.updateUserById = async (req, res) => {
   const userId = req.params.id;
   const { nome, email, password, biografia, foto } = req.body;
 
-  // Verifica se o ID do usuário na solicitação corresponde ao ID do usuário autenticado
+  // Verifica se o ID do utilizador na solicitação corresponde ao ID do utilizador autenticado
   if (userId !== req.loggedUserId) {
     return res.status(403).json({ message: 'Não autorizado' });
   }

@@ -1,9 +1,9 @@
 const express = require("express");
 let router = express.Router();
-const userController = require("../controllers/utilizadores.controller");
+const leaderboardController = require("../controllers/leaderboard.controller.js");
 const authController = require("../controllers/auth.controller");
 
-// middleware for all routes related with users
+// middleware for all routes related with tutorials
 router.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
@@ -16,21 +16,13 @@ router.use((req, res, next) => {
   next();
 });
 // ROUTES
-router 
-  .route("/")
-  .get(authController.verifyToken,userController.getAllUsers)
 router
-  .route("/registo")
-  .post(userController.create);
-router
-  .route("/login")
-  .post(userController.login);
-router
-  .route("/:id")
-  .patch(authController.verifyToken,userController.updateUserById)
-  .get(authController.verifyToken,userController.getUser)
-  .delete(authController.verifyToken,userController.deleteUser);
+  .route("/pontos")
+  .get(authController.verifyToken, leaderboardController.leaderboardByPoints);
 
+router
+    .route("/ecopontos")
+    .get(authController.verifyToken, leaderboardController.leaderboardByEcopontos);
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
