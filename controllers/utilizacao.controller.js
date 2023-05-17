@@ -74,7 +74,7 @@ exports.validarUtilizacao = async (req, res) => {
         await utilizacao.save();
 
         if(utilizacao.ecopontoAprovado) {
-            const user = await User.findById(utilizacao.userId);
+            const user = await User.findById(utilizacao.idUser);
             if(user) {
                 user.pontos += 100;
                 await user.save();
