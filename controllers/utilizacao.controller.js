@@ -78,8 +78,8 @@ exports.validarUtilizacao = async (req, res) => {
             const ecoponto = await Ecoponto.findById(utilizacao.idEcoponto);
             const user = await User.findById(utilizacao.idUser);
             if(user && ecoponto) {
-                user.pontos += 100;
-                user.moedas += 500;
+                user.pontos += 300;
+                user.moedas += 1000;
                 user.numUsoEcopontos+= 1;
                 ecoponto.utilizacoes += 1;
                 await user.save();
