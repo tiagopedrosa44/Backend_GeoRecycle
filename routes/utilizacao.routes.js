@@ -20,6 +20,9 @@ router
     .route("/:id")
     .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
     .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
+router
+   .route("/pendentes")
+    .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
 });
