@@ -24,3 +24,31 @@ exports.getStoreItems = async (req, res) => {
     });
   }
 };
+
+
+//APAGAR UM ITEM DA LOJA
+exports.deleteItem = async (req, res) => {
+  try {
+    if (req.loggedUserType !== "admin")
+      return res.status(403).json({
+        success: false,
+        msg: "Tem que estar autenticado como admin",
+      });
+    let item = await Items.findByIdAndDelete(req.params.id);
+    if (!item)
+      return res.status(404).json({
+        success: false,
+        msg: "Item não encontrado",
+      });
+    res.status(200).json({
+      success: true,
+      msg: "Item apagado com sucesso",
+      item: item,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
+  }
+}
