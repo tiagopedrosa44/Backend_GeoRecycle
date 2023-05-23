@@ -22,8 +22,8 @@ router
   .post(authController.verifyToken, ecopontosController.createEcoponto);
 router
   .route("/:id")
-  //.patch(authController.verifyToken, ecopontosController.updateEcopontoById)
-  .get(authController.verifyToken, ecopontosController.getEcoponto);
+  .get(authController.verifyToken, ecopontosController.getEcoponto)
+  .put(authController.verifyToken,ecopontosController.validarEcoponto);
 
 
 router.all("*", function (req, res) {

@@ -6,7 +6,7 @@ module.exports = (mongoose) => {
         foto: { type: String, required: true },
         data: { type: Date, required: true },
         vistoAdmin: { type: Boolean, default: false },
-        ecopontoAprovado: { type: Boolean, default: false }
+        utilizacaoAprovada: { type: Boolean, default: false }
       },
       { timestamps: false }
     );

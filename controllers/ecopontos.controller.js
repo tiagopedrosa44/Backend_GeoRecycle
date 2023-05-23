@@ -1,5 +1,6 @@
 const db = require("../models");
 const Ecoponto = db.ecopontos;
+const User = db.users;
 const config = require("../config/db.config.js");
 
 //VER ECOPONTOS
@@ -70,5 +71,59 @@ exports.createEcoponto = async (req, res) => {
     res.status(200).json({ message: "Ecoponto criado com sucesso!" });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+// rota validar ecoponto
+exports.validarEcoponto = async (req, res) => {
+  try {
+    if (req.loggedUserType !== "admin")
+      return res.status(401).json({
+        success: false,
+        msg: "Tem que estar autenticado como admin",
+      });
+
+    let idEcoponto = req.params.id;
+    if (!idEcoponto) {
+      return res.status(400).json({
+        success: false,
+        error: "Indique um id de um ecoponto.",
+      });
+    }
+
+    if (!req.body.vistoAdmin || !req.body.ecopontoAprovado) {
+      return res.status(400).json({ error: "Campos por preencher." });
+    }
+
+    let ecoponto = await Ecoponto.findById(idEcoponto);
+    if (!ecoponto) {
+      return res.status(404).json({
+        success: false,
+        error: "Ecoponto não encontrado.",
+      });
+    }
+
+    ecoponto.vistoAdmin = req.body.vistoAdmin;
+    ecoponto.ecopontoAprovado = req.body.ecopontoAprovado;
+    await ecoponto.save();
+
+    if (ecoponto.ecopontoAprovado) {
+      const user = await User.findById(ecoponto.userId);
+      if (user) {
+        user.pontos += 500;
+        user.moedas += 2000;
+        user.ecopontosRegistados += 1;
+        await user.save();
+      }
+    }
+    res.status(200).json({
+      success: true,
+      msg: "Ecoponto aceite com sucesso ",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
   }
 };

@@ -56,7 +56,7 @@ exports.validarUtilizacao = async (req, res) => {
       });
     }
 
-    if (!req.body.vistoAdmin || !req.body.ecopontoAprovado) {
+    if (!req.body.vistoAdmin || !req.body.utilizacaoAprovada) {
       return res.status(400).json({ error: "Campos por preencher." });
     }
 
@@ -69,10 +69,10 @@ exports.validarUtilizacao = async (req, res) => {
     }
 
     utilizacao.vistoAdmin = req.body.vistoAdmin;
-    utilizacao.ecopontoAprovado = req.body.ecopontoAprovado;
+    utilizacao.utilizacaoAprovada = req.body.utilizacaoAprovada;
     await utilizacao.save();
 
-    if (utilizacao.ecopontoAprovado) {
+    if (utilizacao.utilizacaoAprovada) {
       const ecoponto = await Ecoponto.findById(utilizacao.idEcoponto);
       const user = await User.findById(utilizacao.idUser);
       if (user && ecoponto) {
@@ -123,3 +123,5 @@ exports.getUtilizacoesPendentes = async (req, res) => {
     });
   }
 };
+
+
