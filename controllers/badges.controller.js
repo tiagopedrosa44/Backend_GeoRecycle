@@ -36,6 +36,7 @@ exports.editBadge = async (req, res) => {
   }
 };
 
+// rota para eliminar uma badge
 exports.deleteBadge = async (req, res) => {
   try {
     if (req.loggedUserType !== "admin")
