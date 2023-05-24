@@ -22,13 +22,6 @@ router
   .post(authController.verifyToken, ecopontosController.createEcoponto);
 
 router
-<<<<<<< HEAD
-  .route("/:id")
-  .get(authController.verifyToken, ecopontosController.getEcoponto)
-  .put(authController.verifyToken,ecopontosController.validarEcoponto);
-router
-=======
->>>>>>> 053e6daca0326ef136b1a2d043c1604bea0593aa
   .route("/pendentes")
   .get(authController.verifyToken, ecopontosController.getEcopontosPorValidar);
 

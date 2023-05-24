@@ -6,32 +6,34 @@ const config = require("../config/db.config.js");
 exports.editBadge = async (req, res) => {
     try {
         if (req.loggedUserType !== "admin")
-        return res.status(403).json({
-            success: false,
-            msg: "Tem que estar autenticado como admin",
-        });
+            return res.status(403).json({
+                success: false,
+                msg: "Tem que estar autenticado como admin",
+            });
         let badge = await Badges.findByIdAndUpdate(
-        req.params.id,
-        {
-            nome: req.body.nome,
-            foto: req.body.foto,
-        },
-        { new: true }
+            req.params.id,
+            {
+                nome: req.body.nome,
+                foto: req.body.foto,
+            },
+            { new: true }
         );
         if (!badge)
-        return res.status(404).json({
-            success: false,
-            msg: "Badge não encontrada",
-        });
+            return res.status(404).json({
+                success: false,
+                msg: "Badge não encontrada",
+            });
         res.status(200).json({
-        success: true,
-        msg: "Badge atualizada com sucesso",
-        badge: badge,
+            success: true,
+            msg: "Badge atualizada com sucesso",
+            badge: badge,
         });
     } catch (err) {
         res.status(500).json({
-        success: false,
-        msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+            success: false,
+            msg: err.message || "Algo correu mal, tente novamente mais tarde.",
         });
     }
-    }
+}
+
+exports.deleteBadge = async (req, res)
