@@ -19,6 +19,10 @@ router.use((req, res, next) => {
 router
   .route("/")
   .get(authController.verifyToken, lojaController.getStoreItems);
+router
+  .route("/:id")
+  .delete(authController.verifyToken, lojaController.deleteItem)
+  .patch(authController.verifyToken, lojaController.updateItem);
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Loja: what???" });
