@@ -21,7 +21,8 @@ router
   .get(authController.verifyToken, lojaController.getStoreItems);
 router
   .route("/:id")
-  .delete(authController.verifyToken, lojaController.deleteItem);
+  .delete(authController.verifyToken, lojaController.deleteItem)
+  .patch(authController.verifyToken, lojaController.updateItem);
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Loja: what???" });
