@@ -18,10 +18,10 @@ router.use((req, res, next) => {
 // ROUTES
 router
     .route("/")
-    .get(authController.verifyToken, BadgesController.getBadge)
 
 router
     .route("/:id")
+    .get(authController.verifyToken, BadgesController.getBadge)
     .patch(authController.verifyToken, BadgesController.editBadge)
     .delete(authController.verifyToken, BadgesController.deleteBadge);
 
