@@ -127,3 +127,34 @@ exports.validarEcoponto = async (req, res) => {
     });
   }
 };
+
+
+// rota para ver ecopontos por validar
+exports.getEcopontosPorValidar = async (req, res) => {
+  try {
+    if (req.loggedUserType !== "admin")
+      return res.status(401).json({
+        success: false,
+        msg: "Tem que estar autenticado como admin",
+      });
+
+    let ecopontos = await Ecoponto.find({ vistoAdmin: false });
+    
+    if (ecopontos.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: "Não existem ecopontos por validar.",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      ecopontos: ecopontos,
+    });
+  }
+  catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
+  }
+};

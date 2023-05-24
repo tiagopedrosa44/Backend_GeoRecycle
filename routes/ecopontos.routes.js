@@ -24,6 +24,9 @@ router
   .route("/:id")
   .get(authController.verifyToken, ecopontosController.getEcoponto)
   .put(authController.verifyToken,ecopontosController.validarEcoponto);
+router
+  .route("/ecopontos/pendentes")
+  .get(authController.verifyToken, ecopontosController.getEcopontosPorValidar);
 
 
 router.all("*", function (req, res) {
