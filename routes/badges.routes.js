@@ -17,8 +17,9 @@ router.use((req, res, next) => {
 });
 // ROUTES
 router
-    .route("/:id")
-    .patch(authController.verifyToken, BadgesController.editBadge);
+  .route("/:id")
+  .patch(authController.verifyToken, BadgesController.editBadge)
+  .delete(authController.verifyToken, BadgesController.deleteBadge)
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Badge: what???" });
