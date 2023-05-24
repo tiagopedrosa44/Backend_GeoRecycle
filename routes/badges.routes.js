@@ -17,7 +17,11 @@ router.use((req, res, next) => {
 });
 // ROUTES
 router
+    .route("/")
+    
+router
     .route("/:id")
+    .get(authController.verifyToken, BadgesController.getBadge)
     .patch(authController.verifyToken, BadgesController.editBadge);
 
 router.all("*", function (req, res) {
