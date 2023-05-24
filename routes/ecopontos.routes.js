@@ -20,14 +20,15 @@ router
   .route("/")
   .get(authController.verifyToken, ecopontosController.findAll)
   .post(authController.verifyToken, ecopontosController.createEcoponto);
+
+router
+  .route("/pendentes")
+  .get(authController.verifyToken, ecopontosController.getEcopontosPorValidar);
+
 router
   .route("/:id")
   .get(authController.verifyToken, ecopontosController.getEcoponto)
-  .put(authController.verifyToken,ecopontosController.validarEcoponto);
-router
-  .route("/ecopontos/pendentes")
-  .get(authController.verifyToken, ecopontosController.getEcopontosPorValidar);
-
+  .put(authController.verifyToken, ecopontosController.validarEcoponto);
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
