@@ -36,4 +36,28 @@ exports.editBadge = async (req, res) => {
     }
 }
 
-exports.deleteBadge = async (req, res)
+exports.deleteBadge = async (req, res) => {
+    try {
+        if (req.loggedUserType !== "admin")
+            return res.status(403).json({
+                success: false,
+                msg: "Tem que estar autenticado como admin",
+            });
+        let badge = await Badges.findByIdAndDelete(req.params.id);
+        if (!badge)
+            return res.status(404).json({
+                success: false,
+                msg: "Badge não encontrada",
+            });
+        res.status(200).json({
+            success: true,
+            msg: "Badge eliminada com sucesso",
+            badge: badge,
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+        });
+    }
+}
