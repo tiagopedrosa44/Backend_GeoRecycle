@@ -3,7 +3,7 @@ const Items = db.items;
 const config = require("../config/db.config.js");
 
 //Ver todos os items da loja
-exports.getStoreItems = async (req, res) => {
+exports.getStoreItemsAdmin = async (req, res) => {
   try {
     if (req.loggedUserType !== "admin")
       return res.status(403).json({
@@ -26,6 +26,24 @@ exports.getStoreItems = async (req, res) => {
 };
 
 
+/* //Ver todos os items da loja utilizador
+exports.getStoreItemsUser = async (req, res) => {
+  try {
+    let items = await Items.find({},{nome:1,preco:1,foto:1,stock:0,_id:0});
+    console.log(items);
+    res.status(200).json({
+      success: true,
+      msg: "Items retornados com sucesso",
+      items: items,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
+  }
+};
+ */
 //APAGAR UM ITEM DA LOJA
 exports.deleteItem = async (req, res) => {
   try {

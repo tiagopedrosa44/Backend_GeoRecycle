@@ -18,7 +18,10 @@ router.use((req, res, next) => {
 // ROUTES
 router
   .route("/")
-  .get(authController.verifyToken, lojaController.getStoreItems);
+  .get(authController.verifyToken, lojaController.getStoreItemsUser);
+router
+  .route("/admin")
+  .get(authController.verifyToken, lojaController.getStoreItemsAdmin);
 router
   .route("/:id")
   .delete(authController.verifyToken, lojaController.deleteItem)

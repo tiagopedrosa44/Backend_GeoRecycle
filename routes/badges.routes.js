@@ -18,6 +18,7 @@ router.use((req, res, next) => {
 // ROUTES
 router
     .route("/")
+    .get(authController.verifyToken, BadgesController.getAllBadges)
 
 router
     .route("/:id")
