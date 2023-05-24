@@ -28,6 +28,7 @@ exports.create = async (req, res) => {
   const user = new User({
     nome: req.body.nome,
     password: bcrypt.hashSync(req.body.password, 10),
+    confirmPassword : req.body.confirmPassword,
     email: req.body.email,
     referral: referralCode,
     referredBy: req.body.referredBy,
@@ -66,7 +67,14 @@ exports.create = async (req, res) => {
       if (!req.body.password) {
         errors["password"] = "Indique uma palavra-passe";
       }
-
+      // Verificar se a confirmação da senha foi fornecida
+      if (!req.body.confirmPassword) {
+        errors["confirmPassword"] = "Indique uma confirmação da palavra-passe";
+      }
+      // Verificar se a senha e a confirmação da senha são iguais
+      if (req.body.password !== req.body.confirmPassword) {
+        errors["password"] = "A palavra-passe e a confirmação da palavra-passe não são iguais";
+      }
       // Verificar se o email foi fornecido
       if (!req.body.email) {
         errors["email"] = "Indique um email";
