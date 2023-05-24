@@ -27,7 +27,6 @@ exports.create = async (req, res) => {
 
   const user = new User({
     nome: req.body.nome,
-    tipo: req.body.tipo || "user",
     password: bcrypt.hashSync(req.body.password, 10),
     email: req.body.email,
     referral: referralCode,
