@@ -16,6 +16,7 @@ app.use('/ecopontos', require('./routes/ecopontos.routes.js'))
 app.use('/leaderboard', require('./routes/leaderboard.routes.js'))
 app.use('/utilizacao', require('./routes/utilizacao.routes.js'))
 app.use('/loja', require('./routes/items.routes.js'))
+app.use('/badges', require('./routes/badges.routes.js'))
 app.get("*", function (req, res) {
   res.status(404).json({ message: "WHAT???" });
 });

@@ -25,7 +25,7 @@ router
   .get(authController.verifyToken, ecopontosController.getEcoponto)
   .put(authController.verifyToken,ecopontosController.validarEcoponto);
 router
-  .route("/ecopontos/pendentes")
+  .route("/pendentes")
   .get(authController.verifyToken, ecopontosController.getEcopontosPorValidar);
 
 
