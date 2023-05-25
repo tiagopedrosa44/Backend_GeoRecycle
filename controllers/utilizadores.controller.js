@@ -17,22 +17,39 @@ exports.create = async (req, res) => {
       code += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     const existingUser = await User.findOne({
-      referral: code
+      referral: code,
     }).exec();
     if (!existingUser) {
       referralCode = code;
     }
   }
 
-
   const user = new User({
     nome: req.body.nome,
     password: bcrypt.hashSync(req.body.password, 10),
-    confirmPassword : req.body.confirmPassword,
+    confirmPassword: req.body.confirmPassword,
     email: req.body.email,
     referral: referralCode,
     referredBy: req.body.referredBy,
   });
+  console.log(req.body.referredBy);
+  if (!req.body.confirmPassword) {
+    res.status(400).json({
+      success: false,
+      message: "Indique uma confirmação da palavra-passe",
+    });
+    return;
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    res.status(400).json({
+      success: false,
+      message:
+        "A palavra-passe e a confirmação da palavra-passe não são iguais",
+    });
+    return;
+  }
+
   try {
     let newUser = await user.save();
     if (newUser.referredBy) {
@@ -67,27 +84,20 @@ exports.create = async (req, res) => {
       if (!req.body.password) {
         errors["password"] = "Indique uma palavra-passe";
       }
-      // Verificar se a confirmação da senha foi fornecida
-      if (!req.body.confirmPassword) {
-        errors["confirmPassword"] = "Indique uma confirmação da palavra-passe";
-      }
-      // Verificar se a senha e a confirmação da senha são iguais
-      if (req.body.password !== req.body.confirmPassword) {
-        errors["password"] = "A palavra-passe e a confirmação da palavra-passe não são iguais";
-      }
+
       // Verificar se o email foi fornecido
       if (!req.body.email) {
         errors["email"] = "Indique um email";
       }
       const existingUser = await User.findOne({
-        email: req.body.email
+        email: req.body.email,
       }).exec();
       if (existingUser) {
         errors["email duplicado"] = "Email já existe";
       }
       res.status(400).json({
         success: false,
-        message: errors
+        message: errors,
       });
     } else {
       res.status(500).json({
@@ -104,36 +114,43 @@ exports.login = async (req, res) => {
     if (!req.body || !req.body.nome || !req.body.password)
       return res.status(400).json({
         success: false,
-        message: "Tens de fornecer o nome e a password"
+        message: "Tens de fornecer o nome e a password",
       });
 
     let user = await User.findOne({
-      nome: req.body.nome
+      nome: req.body.nome,
     }).exec();
-    if (!user) return res.status(404).json({
-      success: false,
-      message: "Utilizador não encontrado"
-    });
-
-
-    const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-    if (!passwordIsValid) return res.status(401).json({
-      success: false,
-      acessToken: null,
-      message: "Password inválida"
-    });
-
-    const token = jwt.sign({
-        id: user._id,
-        tipo: user.tipo
-      },
-      config.SECRET, {
-        expiresIn: '24h'
+    if (!user)
+      return res.status(404).json({
+        success: false,
+        message: "Utilizador não encontrado",
       });
+
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+    if (!passwordIsValid)
+      return res.status(401).json({
+        success: false,
+        acessToken: null,
+        message: "Password inválida",
+      });
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        tipo: user.tipo,
+      },
+      config.SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
     return res.status(200).json({
       success: true,
       accessToken: token,
-      message: "Login efetuado com sucesso"
+      message: "Login efetuado com sucesso",
     });
   } catch (err) {
     if (err.name === "ValidationError") {
@@ -143,7 +160,7 @@ exports.login = async (req, res) => {
       });
       res.status(400).json({
         success: false,
-        message: errors
+        message: errors,
       });
     } else {
       res.status(500).json({
@@ -154,29 +171,26 @@ exports.login = async (req, res) => {
   }
 };
 
-
 // ROTA PARA VER TODOS OS UTILIZADORES
 exports.getAllUsers = async (req, res) => {
   try {
     if (req.loggedUserType !== "admin")
       return res.status(403).json({
         success: false,
-        msg: "Tem que estar autenticado como admin"
+        msg: "Tem que estar autenticado como admin",
       });
-    let users = await User.find({},
-      "-password")
+    let users = await User.find({}, "-password");
     res.status(200).json({
       success: true,
-      users: users
+      users: users,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      msg: err.message || "Algo correu mal, tente novamente mais tarde."
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
     });
-  };
+  }
 };
-
 
 // ROTA UPDATE DO USER POR ID
 exports.updateUserById = async (req, res) => {
@@ -185,7 +199,7 @@ exports.updateUserById = async (req, res) => {
 
   // Verifica se o ID do utilizador na solicitação corresponde ao ID do utilizador autenticado
   if (userId !== req.loggedUserId) {
-    return res.status(403).json({ message: 'Não autorizado' });
+    return res.status(403).json({ message: "Não autorizado" });
   }
 
   try {
@@ -212,26 +226,25 @@ exports.getUser = async (req, res) => {
     if (req.loggedUserId !== req.params.id && req.loggedUserType)
       return res.status(403).json({
         success: false,
-        msg: "Não tenho premissão para ver este utilizador."
+        msg: "Não tenho premissão para ver este utilizador.",
       });
-    let user = await User.findById(req.params.id,
-      "-password")
-    if (!user) return res.status(404).json({
-      success: false,
-      msg: "Utilizador não encontrado"
-    });
+    let user = await User.findById(req.params.id, "-password");
+    if (!user)
+      return res.status(404).json({
+        success: false,
+        msg: "Utilizador não encontrado",
+      });
     res.status(200).json({
       success: true,
-      user: user
+      user: user,
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      msg: err.message || "Algo correu mal, tente novamente mais tarde."
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
     });
-  };
-}
-
+  }
+};
 
 // ROTA PARA APAGAR UM UTILIZADOR POR ID
 exports.deleteUser = async (req, res) => {
@@ -239,21 +252,22 @@ exports.deleteUser = async (req, res) => {
     if (req.loggedUserType !== "admin")
       return res.status(403).json({
         success: false,
-        msg: "Tem que estar autenticado como admin"
+        msg: "Tem que estar autenticado como admin",
       });
     let user = await User.findByIdAndDelete(req.params.id);
-    if (!user) return res.status(404).json({
-      success: false,
-      msg: "Este utilizador não existe"
-    });
+    if (!user)
+      return res.status(404).json({
+        success: false,
+        msg: "Este utilizador não existe",
+      });
     res.status(200).json({
       success: true,
-      msg: "Utilizador apagado com sucesso"
+      msg: "Utilizador apagado com sucesso",
     });
   } catch (err) {
     res.status(500).json({
       success: false,
-      msg: err.message || "Algo correu mal, tente novamente mais tarde."
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
     });
-  };
-}
+  }
+};
