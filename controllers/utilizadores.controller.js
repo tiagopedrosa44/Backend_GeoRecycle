@@ -207,11 +207,15 @@ exports.updateUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "Utilizador não encontrado!" });
     }
-    user.nome = nome;
-    user.email = email;
-    user.password = bcrypt.hashSync(password, 10);
-    user.biografia = biografia;
-    user.foto = foto;
+    if(req.body.password){
+      user.password = bcrypt.hashSync(password, 10);
+    }
+    if(req.body.biografia){
+      user.biografia = biografia;
+    }
+    if(req.body.foto){
+      user.foto = foto;
+    }
 
     await user.save();
     res.status(200).json({ message: "Utilizador atualizado com sucesso!" });
