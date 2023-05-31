@@ -128,7 +128,7 @@ exports.buyItem = async (req, res) => {
       if(user.moedas < item.preco) {
         return res.status(404).json({
           success: false,
-          msg: "Pontos insuficientes"
+          msg: "PMoedas insuficientes"
         });
       } else {
         user.moedas -= item.preco;
