@@ -205,7 +205,9 @@ exports.updateUserById = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: "Utilizador não encontrado!" });
+      return res.status(404).json({ message: "Utilizador não encontrado!",
+      
+    });
     }
     if(req.body.password){
       user.password = bcrypt.hashSync(password, 10);
@@ -218,7 +220,8 @@ exports.updateUserById = async (req, res) => {
     }
 
     await user.save();
-    res.status(200).json({ message: "Utilizador atualizado com sucesso!" });
+    res.status(200).json({ message: "Utilizador atualizado com sucesso!",
+   });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
