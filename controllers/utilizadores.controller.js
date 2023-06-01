@@ -1,6 +1,7 @@
 const db = require("../models");
 const User = db.users;
 const bcrypt = require("bcryptjs");
+const Badges = db.badges;
 const jwt = require("jsonwebtoken");
 const config = require("../config/db.config.js");
 
@@ -289,6 +290,36 @@ exports.deleteUser = async (req, res) => {
     res.status(200).json({
       success: true,
       msg: "Utilizador apagado com sucesso",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
+  }
+};
+
+// rota ver badges do userLoggado
+exports.getBadgesUser = async (req, res) => {
+  try {
+    let user = await User.findById(req.params.id)
+    if (!user)
+      return res.status(404).json({
+        success: false,
+        msg: "User não encontrado",
+      });
+      let badgeIds = user.badges;
+      if (!badgeIds || badgeIds.length === 0)
+        return res.status(404).json({
+          success: false,
+          msg: "User não tem badges",
+        });
+      let badges = await Badges.find({ _id: { $in: badgeIds } });
+      let badgePhotos = badges.map(badge => badge.foto);
+    res.status(200).json({
+      success: true,
+      msg: "Badges encontradas",
+      badges: badgePhotos,
     });
   } catch (err) {
     res.status(500).json({

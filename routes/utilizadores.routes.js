@@ -30,7 +30,9 @@ router
   .patch(authController.verifyToken,userController.updateUserById)
   .get(authController.verifyToken,userController.getUser)
   .delete(authController.verifyToken,userController.deleteUser);
-  
+router
+  .route("/:id/badges")
+  .get(authController.verifyToken,userController.getBadgesUser);
 
 
 router.all("*", function (req, res) {
