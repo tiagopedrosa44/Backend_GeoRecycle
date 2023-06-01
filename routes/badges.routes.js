@@ -3,7 +3,6 @@ let router = express.Router();
 const BadgesController = require("../controllers/badges.controller.js");
 const authController = require("../controllers/auth.controller.js");
 
-// middleware for all routes related with the store
 router.use((req, res, next) => {
     const start = Date.now();
     res.on("finish", () => {

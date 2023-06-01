@@ -3,7 +3,7 @@ let router = express.Router();
 const userController = require("../controllers/utilizadores.controller");
 const authController = require("../controllers/auth.controller");
 
-// middleware for all routes related with users
+
 router.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
