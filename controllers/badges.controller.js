@@ -12,11 +12,13 @@ exports.editBadge = async (req, res) => {
         msg: "Tem que estar autenticado como admin",
       });
     let badge = await Badges.findByIdAndUpdate(
-      req.params.id, {
+      req.params.id,
+      {
         nome: req.body.nome,
         foto: req.body.foto,
-      }, {
-        new: true
+      },
+      {
+        new: true,
       }
     );
     if (!badge)
@@ -64,10 +66,14 @@ exports.deleteBadge = async (req, res) => {
   }
 };
 
-
 //ver todas as badges
 exports.getAllBadges = async (req, res) => {
   try {
+    if (req.loggedUserType !== "admin")
+      return res.status(403).json({
+        success: false,
+        msg: "Tem que estar autenticado como admin",
+      });
     let badges = await Badges.find();
     if (!badges)
       return res.status(404).json({
