@@ -21,6 +21,7 @@
         "webpack": "^5.85.0"
     },
     "dependencies": {
+        "notice": "^0.0.6",
         "webpack-cli": "^5.1.1"
     }
 }
