@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "build": "webpack --config webpack.config.js",
+        "build": "",
         "test": "echo \"No test specified\" && exit 1",
         "start": "node index.js"
     },
@@ -21,7 +21,6 @@
         "webpack": "^5.85.0"
     },
     "dependencies": {
-        "notice": "^0.0.6",
         "webpack-cli": "^5.1.1"
     }
 }
