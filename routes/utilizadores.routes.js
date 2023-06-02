@@ -3,7 +3,7 @@ let router = express.Router();
 const userController = require("../controllers/utilizadores.controller");
 const authController = require("../controllers/auth.controller");
 
-// middleware for all routes related with users
+
 router.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
@@ -30,7 +30,9 @@ router
   .patch(authController.verifyToken,userController.updateUserById)
   .get(authController.verifyToken,userController.getUser)
   .delete(authController.verifyToken,userController.deleteUser);
-  
+router
+  .route("/:id/badges")
+  .get(authController.verifyToken,userController.getBadgesUser);
 
 
 router.all("*", function (req, res) {
