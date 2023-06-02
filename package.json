@@ -19,5 +19,8 @@
     "homepage": "https://github.com/tiagopedrosa44/Backend_GeoRecycle#readme",
     "devDependencies": {
         "webpack": "^5.85.0"
+    },
+    "dependencies": {
+        "webpack-cli": "^5.1.1"
     }
 }
