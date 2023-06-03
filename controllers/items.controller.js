@@ -1,5 +1,6 @@
 const db = require("../models");
 const Items = db.items;
+const User = db.users;
 const config = require("../config/db.config.js");
 
 //Ver todos os items da loja

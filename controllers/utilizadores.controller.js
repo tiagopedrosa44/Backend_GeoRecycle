@@ -298,10 +298,10 @@ exports.deleteUser = async (req, res) => {
 exports.getBadgesUser = async (req, res) => {
   try {
     let user = await User.findById(req.params.id);
-    if (!user)
-      return res.status(404).json({
+    if (req.loggedUserId !== req.params.id && req.loggedUserType)
+      return res.status(403).json({
         success: false,
-        msg: "User não encontrado",
+        msg: "Não tenho premissão para ver este utilizador.",
       });
     let badgeIds = user.badges;
     if (!badgeIds || badgeIds.length === 0)

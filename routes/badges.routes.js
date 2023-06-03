@@ -22,7 +22,6 @@ router
 
 router
     .route("/:id")
-    .get(authController.verifyToken, BadgesController.getBadge)
     .patch(authController.verifyToken, BadgesController.editBadge)
     .delete(authController.verifyToken, BadgesController.deleteBadge);
 
