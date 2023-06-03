@@ -3,6 +3,7 @@ let router = express.Router();
 const ecopontosController = require("../controllers/ecopontos.controller");
 const authController = require("../controllers/auth.controller");
 
+// middleware for all routes related with ecopontos
 router.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
@@ -30,7 +31,7 @@ router
   .put(authController.verifyToken, ecopontosController.validarEcoponto);
 
 router.all("*", function (req, res) {
-  res.status(404).json({ message: "Ecopontos: what???" });
+  res.status(404).json({ message: "Users: what???" });
 });
 // EXPORT ROUTES (required by APP)
 module.exports = router;

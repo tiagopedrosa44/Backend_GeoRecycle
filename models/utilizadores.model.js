@@ -12,12 +12,7 @@ module.exports = (mongoose) => {
       numUsoEcopontos: { type: Number, default: 0 },
       ecopontosRegistados: { type: Number, default: 0 },
       biografia: {type: String,default: ""},
-      badges: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Badge",
-        },  
-      ],
+      badges: [],
       referral:{type: String, default: ""},
       referredBy: {type: String, default: ""}
     },

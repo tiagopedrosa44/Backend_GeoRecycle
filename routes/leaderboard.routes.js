@@ -3,7 +3,7 @@ let router = express.Router();
 const leaderboardController = require("../controllers/leaderboard.controller.js");
 const authController = require("../controllers/auth.controller");
 
-
+// middleware for all routes related with leaderboard
 router.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
@@ -25,7 +25,7 @@ router
     .get(authController.verifyToken, leaderboardController.leaderboardByEcopontos);
 
 router.all("*", function (req, res) {
-  res.status(404).json({ message: "Leaderboards: what???" });
+  res.status(404).json({ message: "Users: what???" });
 });
 // EXPORT ROUTES (required by APP)
 module.exports = router;

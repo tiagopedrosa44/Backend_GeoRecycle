@@ -3,7 +3,7 @@ let router = express.Router();
 const utilizacaoController = require("../controllers/utilizacao.controller");
 const authController = require("../controllers/auth.controller");
 
-
+// middleware for all routes related with utilizacao
 router.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
@@ -24,7 +24,7 @@ router
    .route("/pendentes")
     .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
 router.all("*", function (req, res) {
-  res.status(404).json({ message: "Utilizaçao: what???" });
+  res.status(404).json({ message: "Users: what???" });
 });
 // EXPORT ROUTES (required by APP)
 module.exports = router;
