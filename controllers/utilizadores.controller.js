@@ -196,7 +196,7 @@ exports.getAllUsers = async (req, res) => {
 // ROTA UPDATE DO USER POR ID
 exports.updateUserById = async (req, res) => {
   const userId = req.params.id;
-  const { nome, email, password, biografia, foto } = req.body;
+  const { password, confirmPassword, biografia, foto } = req.body;
 
   // Verifica se o ID do utilizador na solicitação corresponde ao ID do utilizador autenticado
   if (userId !== req.loggedUserId) {
@@ -208,11 +208,32 @@ exports.updateUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "Utilizador não encontrado!" });
     }
-    user.nome = nome;
-    user.email = email;
-    user.password = bcrypt.hashSync(password, 10);
-    user.biografia = biografia;
-    user.foto = foto;
+
+    //verificar se a password e confirmar sao iguais, verificar se a password é igual a antiga, se tudo estiver bem altera a password
+    if (password && confirmPassword) {
+      if (password === confirmPassword) {
+        if (bcrypt.compareSync(password, user.password)) {
+          return res
+            .status(400)
+            .json({ message: "A nova password não pode ser igual à antiga!" });
+        } else {
+          user.password = bcrypt.hashSync(password, 10);
+        }
+      } else {
+        return res.status(400).json({ message: "As passwords não coincidem!" });
+      }
+    } else if (password && !confirmPassword) {
+      return res.status(400).json({ message: "Confirme a password!" });
+    } else if (!password && confirmPassword) {
+      return res.status(400).json({ message: "Indique a password!" });
+    }
+
+    if (biografia) {
+      user.biografia = biografia;
+    }
+    if (req.body.foto) {
+      user.foto = foto;
+    }
 
     await user.save();
     res.status(200).json({ message: "Utilizador atualizado com sucesso!" });
@@ -276,20 +297,20 @@ exports.deleteUser = async (req, res) => {
 // rota ver badges do userLoggado
 exports.getBadgesUser = async (req, res) => {
   try {
-    let user = await User.findById(req.params.id)
+    let user = await User.findById(req.params.id);
     if (!user)
       return res.status(404).json({
         success: false,
         msg: "User não encontrado",
       });
-      let badgeIds = user.badges;
-      if (!badgeIds || badgeIds.length === 0)
-        return res.status(404).json({
-          success: false,
-          msg: "User não tem badges",
-        });
-      let badges = await Badges.find({ _id: { $in: badgeIds } });
-      let badgePhotos = badges.map(badge => badge.foto);
+    let badgeIds = user.badges;
+    if (!badgeIds || badgeIds.length === 0)
+      return res.status(404).json({
+        success: false,
+        msg: "User não tem badges",
+      });
+    let badges = await Badges.find({ _id: { $in: badgeIds } });
+    let badgePhotos = badges.map((badge) => badge.foto);
     res.status(200).json({
       success: true,
       msg: "Badges encontradas",
