@@ -74,6 +74,7 @@ exports.deleteItem = async (req, res) => {
 
 //Modificar um item da loja
 exports.updateItem = async (req, res) => {
+  const {preco,stock} = req.body;
   try{
     if(req.loggedUserType !== "admin")
       return res.status(403).json({
@@ -86,10 +87,10 @@ exports.updateItem = async (req, res) => {
         success: false,
         msg: "Item não encontrado"
       });
-    if(req.body.preco)
-      item.preco = req.body.preco;
-    if(req.body.stock)
-      item.stock = req.body.stock;
+    if(preco)
+      item.preco = preco;
+    if(stock)
+      item.stock = stock;
     
     await item.save();
     res.status(200).json({
