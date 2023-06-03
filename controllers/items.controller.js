@@ -86,8 +86,6 @@ exports.updateItem = async (req, res) => {
         success: false,
         msg: "Item não encontrado"
       });
-    if(req.body.nome)
-      item.nome = req.body.nome;
     if(req.body.preco)
       item.preco = req.body.preco;
     if(req.body.stock)
