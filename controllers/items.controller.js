@@ -107,3 +107,44 @@ exports.updateItem = async (req, res) => {
     });
   }
 }
+//fazer uma compra
+exports.buyItem = async (req, res) => {
+  try{
+    let item = await Items.findById(req.params.id);
+    if(!item)
+      return res.status(404).json({
+        success: false,
+        msg: "Item não encontrado"
+      });
+    if(item.stock <= 0)
+      return res.status(404).json({
+        success: false,
+        msg: "Item sem stock"
+      });
+    if(item){
+      const user = await User.findById(req.loggedUserId);
+      if(user.moedas < item.preco) {
+        return res.status(404).json({
+          success: false,
+          msg: "Moedas insuficientes"
+        });
+      } else {
+        user.moedas -= item.preco;
+        item.stock -= 1;
+        await user.save();
+        await item.save();
+      }
+    }
+    res.status(200).json({
+      success: true,
+      msg: "Item comprado com sucesso",
+      item: item
+    });
+
+  } catch(err){
+    res.status(500).json({
+      success: false,
+      msg: err.message
+    });
+  }
+}
