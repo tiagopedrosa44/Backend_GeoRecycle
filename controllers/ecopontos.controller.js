@@ -6,7 +6,7 @@ const config = require("../config/db.config.js");
 //VER ECOPONTOS
 exports.findAll = async (req, res) => {
   try {
-    let data = await Ecoponto.find({}, { morada: 1, coordenadas: 1, _id: 0 });
+    let data = await Ecoponto.find({ecopontoAprovado:true}, { morada: 1, coordenadas: 1, _id: 1 });
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
@@ -91,8 +91,13 @@ exports.validarEcoponto = async (req, res) => {
       });
     }
 
-    if (!req.body.vistoAdmin || !req.body.ecopontoAprovado) {
-      return res.status(400).json({ error: "Campos por preencher." });
+    if (!req.body.ecopontoAprovado) {
+      //apagar ecoponto
+      await Ecoponto.findByIdAndDelete(idEcoponto);
+      return res.status(200).json({
+        success: true,
+        msg: "Ecoponto apagado com sucesso ",
+      });
     }
 
     let ecoponto = await Ecoponto.findById(idEcoponto);
@@ -103,7 +108,7 @@ exports.validarEcoponto = async (req, res) => {
       });
     }
 
-    ecoponto.vistoAdmin = req.body.vistoAdmin;
+    ecoponto.vistoAdmin = true
     ecoponto.ecopontoAprovado = req.body.ecopontoAprovado;
     await ecoponto.save();
 
