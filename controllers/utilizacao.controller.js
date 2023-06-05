@@ -63,8 +63,13 @@ exports.validarUtilizacao = async (req, res) => {
       });
     }
 
-    if (!req.body.vistoAdmin || !req.body.utilizacaoAprovada) {
-      return res.status(400).json({ error: "Campos por preencher." });
+    if (!req.body.utilizacaoAprovada) {
+      //apagar utilização
+      await Utilizacao.findByIdAndDelete(idUtilizacao);
+      return res.status(200).json({
+        success: true,
+        msg: "Utilização apagada com sucesso ",
+      });
     }
 
     let utilizacao = await Utilizacao.findById(idUtilizacao);
@@ -75,7 +80,7 @@ exports.validarUtilizacao = async (req, res) => {
       });
     }
 
-    utilizacao.vistoAdmin = req.body.vistoAdmin;
+    utilizacao.vistoAdmin = true;
     utilizacao.utilizacaoAprovada = req.body.utilizacaoAprovada;
     await utilizacao.save();
 
