@@ -21,6 +21,9 @@ router
     .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
     .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
 router
+    .route("/:idUser")
+    .get(authController.verifyToken, utilizacaoController.getUtilizaçoesByUser)
+router
    .route("/pendentes")
     .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
 router.all("*", function (req, res) {

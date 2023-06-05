@@ -256,6 +256,10 @@ exports.getUser = async (req, res) => {
         success: false,
         msg: "Utilizador não encontrado",
       });
+    //calcular novo nivel
+    let newLevel = Math.floor(user.pontos / 1000);
+    user.nivel = newLevel;
+    await user.save();
     res.status(200).json({
       success: true,
       user: user,

@@ -131,4 +131,39 @@ exports.getUtilizacoesPendentes = async (req, res) => {
   }
 };
 
+exports.getUtilizaçoesByUser = async (req, res) => {
+  try{
+    let user = await User.findById(req.params.idUser);
+    let utilizacoes = await Utilizacao.find({
+      idUser: user,
+      vistoAdmin: true,
+      utilizacaoAprovada: true,
+    },
+    {foto:1,_id:0 }
+    );
+    if(req.loggedUserId !== req.params.idUser){
+      return res.status(403).json({
+        success: false,
+        msg: "Não tenho premissão para ver estas utilizações.",
+      });
+    }
+    if(utilizacoes.length === 0){
+      return res.status(404).json({
+        success: false,
+        error: "Não existe nenhuma utilização!",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      utilizacoes: utilizacoes,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
+  }
+}
+
 
