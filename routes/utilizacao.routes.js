@@ -17,15 +17,16 @@ router.use((req, res, next) => {
 });
 // ROUTES
 router
+    .route("/pendentes")
+    .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
+router
     .route("/:id")
     .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
     .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
 router
     .route("/:idUser")
     .get(authController.verifyToken, utilizacaoController.getUtilizaçoesByUser)
-router
-   .route("/pendentes")
-    .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
+
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
 });
