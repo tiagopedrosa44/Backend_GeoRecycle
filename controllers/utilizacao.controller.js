@@ -21,7 +21,7 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
     let newUtilizacao = new Utilizacao({
-      idUser: req.loggedUserId,
+      idUser: req.body.idUser,
       idEcoponto: idEcoponto,
       foto: req.body.foto,
       data: Date.now(),
