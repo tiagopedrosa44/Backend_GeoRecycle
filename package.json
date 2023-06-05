@@ -18,6 +18,7 @@
     },
     "homepage": "https://github.com/tiagopedrosa44/Backend_GeoRecycle#readme",
     "devDependencies": {
+        "nodemon": "^2.0.22",
         "webpack": "^5.85.0"
     },
     "dependencies": {
