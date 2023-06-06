@@ -1,11 +1,9 @@
 {
     "name": "backend_georecycle",
     "version": "1.0.0",
-    "description": "",
+    "description": "API for GeoRecycle",
     "scripts": {
-        "build": "",
         "test": "echo \"No test specified\" && exit 1",
-        "start": "node index.js"
     },
     "repository": {
         "type": "git",
