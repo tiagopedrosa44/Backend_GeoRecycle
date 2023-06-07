@@ -22,14 +22,14 @@ exports.registarUtilizacao = async (req, res) => {
         error: "Indique o id do ecoponto.",
       });
     }
-    if (!req.file) {
+    if (!req.body.foto) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
     }
     // Fazer o upload da foto para o Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const result = await cloudinary.uploader.upload(req.body.foto);
 
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
