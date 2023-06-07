@@ -1,8 +1,25 @@
 const express = require("express");
-let router = express.Router();
+
 const utilizacaoController = require("../controllers/utilizacao.controller");
 const authController = require("../controllers/auth.controller");
 
+
+
+// NEW MULTER
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+}); // save the file to memory first
+
+const multerUploads = multer({ storage }).single('image'); // specifies the field name multer should go to when it’s looking for the file
+
+
+let router = express.Router();
 // middleware for all routes related with utilizacao
 router.use((req, res, next) => {
   const start = Date.now();
@@ -21,7 +38,7 @@ router
     .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
 router
     .route("/:id")
-    .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
+    .post(multerUploads,authController.verifyToken, utilizacaoController.registarUtilizacao)
     .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
 router
     .route("/:idUser")

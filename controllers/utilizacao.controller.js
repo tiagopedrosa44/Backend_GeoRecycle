@@ -7,6 +7,10 @@ const config = require("../config/db.config.js");
 // Registar utilização de ecoponto
 exports.registarUtilizacao = async (req, res) => {
   try {
+    let utilizacao_imgage = null;
+    if (req.file) {
+      utilizacao_imgage = await cloudinary.uploader.upload(req.file.path);
+    }
     let idEcoponto = req.params.id;
     if (!idEcoponto) {
       return res.status(400).json({
@@ -23,7 +27,8 @@ exports.registarUtilizacao = async (req, res) => {
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
-      foto: req.body.foto,
+      foto: utilizacao_imgage ? utilizacao_imgage.url : null,
+      cloudinary_id: utilizacao_imgage ? utilizacao_imgage.public_id : null,
       data: Date.now(),
     });
     await newUtilizacao.save();
