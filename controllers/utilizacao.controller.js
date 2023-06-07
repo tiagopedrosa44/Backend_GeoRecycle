@@ -45,9 +45,6 @@ exports.registarUtilizacao = async (req, res) => {
       data: Date.now(),
     });
     await newUtilizacao.save();
-    
-    // Remover o arquivo temporário do servidor
-    fs.unlinkSync(req.file.path);
 
     res.status(200).json({
       success: true,
