@@ -2,14 +2,14 @@ const db = require("../models");
 const Utilizacao = db.utilizacaos;
 const User = db.users;
 const Ecoponto = db.ecopontos;
-require("dotenv").config()
+const config = require("../config/db.config.js");
 
 
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
-  C_CLOUD_NAME : process.env.C_CLOUD_NAME,
-  C_API_KEY : process.env.C_API_KEY,
-  C_API_SECRET : process.env.C_API_SECRET,
+  C_CLOUD_NAME : config.C_CLOUD_NAME,
+  C_API_KEY : config.C_API_KEY,
+  C_API_SECRET : config.C_API_SECRET,
 });
 
 // Registar utilização de ecoponto
@@ -22,19 +22,26 @@ exports.registarUtilizacao = async (req, res) => {
         error: "Indique o id do ecoponto.",
       });
     }
-    if (!req.body.foto) {
+
+    let utilizacao_image = null
+    if (req.file) {
+      let img_file = req.file.path;
+      let result = await cloudinary.uploader.upload(img_file);
+      utilizacao_image = result
+    }
+
+    /* if (!req.body.foto) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
-    }
-    // Fazer o upload da foto para o Cloudinary
-    const result = await cloudinary.uploader.upload(req.body.foto);
+    } */
 
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
-      foto: result.secure_url, // Salvar a URL da imagem no Cloudinary
+      foto: utilizacao_image ? utilizacao_image.url : null,
+      cloudinary_id: utilizacao_image ? utilizacao_image.public_id : null,
       data: Date.now(),
     });
     await newUtilizacao.save();
