@@ -12,6 +12,7 @@ cloudinary.config({
   C_API_SECRET : process.env.C_API_SECRET,
 });
 
+// Registar utilização de ecoponto
 exports.registarUtilizacao = async (req, res) => {
   try {
     let idEcoponto = req.params.id;
@@ -27,18 +28,19 @@ exports.registarUtilizacao = async (req, res) => {
         error: "Coloque uma foto.",
       });
     }
-
-    // Enviar a imagem para o Cloudinary
+    // Fazer o upload da foto para o Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path);
 
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
-      foto: result.secure_url, // Usar a URL segura fornecida pelo Cloudinary
+      foto: result.secure_url, // Salvar a URL da imagem no Cloudinary
       data: Date.now(),
     });
-
     await newUtilizacao.save();
+    
+    // Remover o arquivo temporário do servidor
+    fs.unlinkSync(req.file.path);
 
     res.status(200).json({
       success: true,

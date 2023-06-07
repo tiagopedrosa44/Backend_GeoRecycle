@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     }
 }); // save the file to memory first
 
-const multerUploads = multer({ storage }).single('image'); // specifies the field name multer should go to when it’s looking for the file
+const multerUploads = multer({ storage }).single('foto'); // specifies the field name multer should go to when it’s looking for the file
 
 
 let router = express.Router();
