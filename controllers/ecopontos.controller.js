@@ -39,6 +39,10 @@ exports.getEcoponto = async (req, res) => {
 //CRIAR NOVO ECOPONTO
 exports.createEcoponto = async (req, res) => {
   try {
+    let ecoponto_imgage = null
+    if (req.file) {
+      ecoponto_imgage = await cloudinary.uploader.upload(req.file.path);
+    }
     let ecopontos = await Ecoponto.findOne({ morada: req.body.morada });
     if (ecopontos) {
       return res.status(400).json({
@@ -65,7 +69,8 @@ exports.createEcoponto = async (req, res) => {
       morada: req.body.morada,
       coordenadas: req.body.coordenadas,
       dataCriacao: currentDate,
-      foto: req.body.foto,
+      foto: ecoponto_imgage ? ecoponto_imgage.url : null,
+      cloudinary_id: ecoponto_imgage ? ecoponto_imgage.public_id : null,
     });
     await newEcoponto.save();
     res.status(200).json({ message: "Ecoponto criado com sucesso!" });

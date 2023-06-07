@@ -1,7 +1,25 @@
 const express = require("express");
-let router = express.Router();
+
 const ecopontosController = require("../controllers/ecopontos.controller");
 const authController = require("../controllers/auth.controller");
+
+// NEW MULTER
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+}); // save the file to memory first
+const multerUploads = multer({ storage }).single('image'); // specifies the field name multer should go to when it’s looking for the file
+
+
+
+
+
+let router = express.Router();
 
 // middleware for all routes related with ecopontos
 router.use((req, res, next) => {
@@ -15,11 +33,14 @@ router.use((req, res, next) => {
   });
   next();
 });
+
+
+
 // ROUTES
 router
   .route("/")
   .get(authController.verifyToken, ecopontosController.findAll)
-  .post(authController.verifyToken, ecopontosController.createEcoponto);
+  .post(multerUploads,authController.verifyToken, ecopontosController.createEcoponto);
 
 router
   .route("/pendentes")
