@@ -10,12 +10,6 @@ app.use(express.json()); //enable parsing JSON body data
 app.get("/", function (req, res) {
   res.status(200).json({ message: "GeoRecycle API" });
 });
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  res.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, PATCH, DELETE");
-  next();
-});
 // routing middleware for resource Users
 app.use('/utilizadores', require('./routes/utilizadores.routes.js'))
 app.use('/ecopontos', require('./routes/ecopontos.routes.js'))
