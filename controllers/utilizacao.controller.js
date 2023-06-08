@@ -6,6 +6,7 @@ const config = require("../config/db.config.js");
 
 
 
+
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
   C_CLOUD_NAME : config.C_CLOUD_NAME,
@@ -47,17 +48,11 @@ exports.registarUtilizacao = async (req, res) => {
       msg: "Utilização registada com sucesso.",
     });
   } catch (err) {
-    if (err instanceof multer.MulterError) {
-      return res.status(400).json({
-        success: false,
-        error: err.message,
-      });
-    } else if (err) {
       return res.status(500).json({
         success: false,
         error: err.message || "Algo correu mal, tente novamente mais tarde.",
       });
-    }
+    
   }
 };
 
