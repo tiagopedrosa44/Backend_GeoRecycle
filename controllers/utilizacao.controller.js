@@ -5,6 +5,7 @@ const Ecoponto = db.ecopontos;
 const config = require("../config/db.config.js");
 
 
+
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
   C_CLOUD_NAME : config.C_CLOUD_NAME,
@@ -12,7 +13,6 @@ cloudinary.config({
   C_API_SECRET : config.C_API_SECRET,
 });
 
-// Registar utilização de ecoponto
 exports.registarUtilizacao = async (req, res) => {
   try {
     let idEcoponto = req.params.id;
@@ -23,20 +23,16 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
 
-    let utilizacao_image = null
+    let utilizacao_image = null;
     if (req.file) {
-      let img_file = req.file.path;
-      let result = await cloudinary.uploader.upload(img_file);
-      utilizacao_image = result
+      const filePath = req.file.path;
+      const result = await cloudinary.uploader.upload(filePath);
+      utilizacao_image = result;
+
+      // Exclua o arquivo local após o upload
+      fs.unlinkSync(filePath);
     }
-
-    /* if (!req.body.foto) {
-      return res.status(400).json({
-        success: false,
-        error: "Coloque uma foto.",
-      });
-    } */
-
+  
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
@@ -51,10 +47,17 @@ exports.registarUtilizacao = async (req, res) => {
       msg: "Utilização registada com sucesso.",
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
-    });
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({
+        success: false,
+        error: err.message,
+      });
+    } else if (err) {
+      return res.status(500).json({
+        success: false,
+        error: err.message || "Algo correu mal, tente novamente mais tarde.",
+      });
+    }
   }
 };
 

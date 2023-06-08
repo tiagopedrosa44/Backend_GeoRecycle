@@ -7,9 +7,9 @@ const authController = require("../controllers/auth.controller");
 
 // NEW MULTER
 const multer = require('multer');
-const storage = multer.diskStorage({
+const storage = multer.memoryStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads')
+        cb(null, '/uploads')
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now())
