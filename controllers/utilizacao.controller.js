@@ -31,7 +31,6 @@ exports.registarUtilizacao = async (req, res) => {
         folder: "utilizacoes",
         crop: "scale",
       });
-      console.log(utilizacao_image);
     }
 
     let newUtilizacao = new Utilizacao({
@@ -45,6 +44,7 @@ exports.registarUtilizacao = async (req, res) => {
     res.status(200).json({
       success: true,
       msg: "Utilização registada com sucesso.",
+      img: utilizacao_image,
     });
   } catch (err) {
     res.status(500).json({
