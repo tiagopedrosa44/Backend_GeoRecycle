@@ -4,14 +4,11 @@ const User = db.users;
 const Ecoponto = db.ecopontos;
 const config = require("../config/db.config.js");
 
-
-
-
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
-  C_CLOUD_NAME : config.C_CLOUD_NAME,
-  C_API_KEY : config.C_API_KEY,
-  C_API_SECRET : config.C_API_SECRET,
+  C_CLOUD_NAME: config.C_CLOUD_NAME,
+  C_API_KEY: config.C_API_KEY,
+  C_API_SECRET: config.C_API_SECRET,
 });
 
 exports.registarUtilizacao = async (req, res) => {
@@ -24,21 +21,24 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
 
-    let utilizacao_image = null;
-    if (req.file) {
-      const filePath = req.file.path;
-      const result = await cloudinary.uploader.upload(filePath);
-      utilizacao_image = result;
-
-      // Exclua o arquivo local após o upload
-      fs.unlinkSync(filePath);
+    let idUser = req.body.idUser;
+    if (!idUser) {
+      return res.status(400).json({
+        success: false,
+        error: "Indique o id do usuário.",
+      });
     }
-  
+
+    let utilizacao_image = null;
+    if (req.body.imagem) {
+      const result = await cloudinary.uploader.upload(req.body.imagem);
+      utilizacao_image = result.url;
+    }
+
     let newUtilizacao = new Utilizacao({
-      idUser: req.body.idUser,
+      idUser: idUser,
       idEcoponto: idEcoponto,
-      foto: utilizacao_image ? utilizacao_image.url : null,
-      cloudinary_id: utilizacao_image ? utilizacao_image.public_id : null,
+      foto: utilizacao_image,
       data: Date.now(),
     });
     await newUtilizacao.save();
@@ -48,11 +48,10 @@ exports.registarUtilizacao = async (req, res) => {
       msg: "Utilização registada com sucesso.",
     });
   } catch (err) {
-      return res.status(500).json({
-        success: false,
-        error: err.message || "Algo correu mal, tente novamente mais tarde.",
-      });
-    
+    return res.status(500).json({
+      success: false,
+      error: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
   }
 };
 
@@ -154,22 +153,23 @@ exports.getUtilizacoesPendentes = async (req, res) => {
 };
 
 exports.getUtilizaçoesByUser = async (req, res) => {
-  try{
+  try {
     let user = await User.findById(req.params.idUser);
-    let utilizacoes = await Utilizacao.find({
-      idUser: user,
-      vistoAdmin: true,
-      utilizacaoAprovada: true,
-    },
-    {foto:1,_id:0 }
+    let utilizacoes = await Utilizacao.find(
+      {
+        idUser: user,
+        vistoAdmin: true,
+        utilizacaoAprovada: true,
+      },
+      { foto: 1, _id: 0 }
     );
-    if(req.loggedUserId !== req.params.idUser){
+    if (req.loggedUserId !== req.params.idUser) {
       return res.status(403).json({
         success: false,
         msg: "Não tenho premissão para ver estas utilizações.",
       });
     }
-    if(utilizacoes.length === 0){
+    if (utilizacoes.length === 0) {
       return res.status(404).json({
         success: false,
         error: "Não existe nenhuma utilização!",
@@ -179,13 +179,10 @@ exports.getUtilizaçoesByUser = async (req, res) => {
       success: true,
       utilizacoes: utilizacoes,
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,
       msg: err.message || "Algo correu mal, tente novamente mais tarde.",
     });
   }
-}
-
-
+};
