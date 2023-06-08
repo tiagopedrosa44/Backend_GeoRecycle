@@ -31,6 +31,7 @@ exports.registarUtilizacao = async (req, res) => {
         folder: "utilizacoes",
         crop: "scale",
       });
+      console.log(utilizacao_image);
     }
 
     let newUtilizacao = new Utilizacao({
