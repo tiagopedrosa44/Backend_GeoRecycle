@@ -12,15 +12,7 @@ cloudinary.config({
 });
 
 
-async function uploadToCloudinary(image, folder) {
-	try {
-		await cloudinary.uploader.upload(image, {
-			folder: folder, crop: "scale"
-		});
-	} catch (err) {
-		console.log(err);
-	}
-}
+
 
 
 exports.registarUtilizacao = async (req, res) => {
@@ -33,23 +25,18 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
 
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        error: "Coloque uma foto.",
+    let utilizacao_image = null;
+    if (req.file) {
+      utilizacao_image = await cloudinary.uploader.upload(req.file.path, {
+        folder: "utilizacoes",
+        crop: "scale",
       });
     }
 
-    // Fazer o upload da imagem para o Cloudinary
-    const imageUrl = await cloudinary.uploader.upload(req.file.path, {
-      folder: "utilizacoes",
-      crop: "scale",
-    })
-    console.log(req.file)
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
-      foto: imageUrl,
+      foto: utilizacao_image.secure_url,
       data: Date.now(),
     });
     await newUtilizacao.save();
