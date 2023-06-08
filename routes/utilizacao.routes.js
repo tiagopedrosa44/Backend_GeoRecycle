@@ -5,19 +5,6 @@ const authController = require("../controllers/auth.controller");
 
 
 
-// NEW MULTER
-const multer = require('multer');
-const storage = multer.memoryStorage({
-    destination: (req, file, cb) => {
-        cb(null, '/uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-}); // save the file to memory first
-const multerUploads = multer({ storage, limits:{fileSize:10*1024*1024} }).single('foto'); // specifies the field name multer should go to when it’s looking for the file
-
-
 let router = express.Router();
 // middleware for all routes related with utilizacao
 router.use((req, res, next) => {
@@ -37,7 +24,7 @@ router
     .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
 router
     .route("/:id")
-    .post(multerUploads,authController.verifyToken, utilizacaoController.registarUtilizacao)
+    .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
     .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
 router
     .route("/:idUser")

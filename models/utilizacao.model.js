@@ -4,7 +4,6 @@ module.exports = (mongoose) => {
         idUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
         idEcoponto: { type: mongoose.Schema.Types.ObjectId, ref: 'Ecoponto', required: true },
         foto: { type: String, required: true },
-        cloudinary_id: { type: String, required: true },
         data: { type: Date, required: true },
         vistoAdmin: { type: Boolean, default: false },
         utilizacaoAprovada: { type: Boolean, default: false }
