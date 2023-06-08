@@ -43,7 +43,7 @@ exports.registarUtilizacao = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      msg: `Utilização registada com sucesso.${req.file}`,
+      msg: `Utilização registada com sucesso.${req.file.path}`,
     });
   } catch (err) {
     res.status(500).json({
