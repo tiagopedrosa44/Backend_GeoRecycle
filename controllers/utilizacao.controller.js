@@ -26,7 +26,7 @@ const upload = multer({
 // Função para fazer o upload da imagem para o Cloudinary
 const uploadImage = async (file) => {
   try {
-    const result = await cloudinary.uploader.upload(file.path);
+    const result = await cloudinary.uploader.upload(file);
     return result.secure_url;
   } catch (error) {
     throw new Error("Erro ao fazer upload da imagem para o Cloudinary");
