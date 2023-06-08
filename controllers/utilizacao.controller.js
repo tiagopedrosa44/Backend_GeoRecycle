@@ -10,6 +10,19 @@ cloudinary.config({
   api_key: config.CLOUDINARY_API_KEY,
   api_secret: config.CLOUDINARY_API_SECRET,
 });
+
+
+const multer = require("multer");
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: "./uploads",
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
+    },
+  }),
+});
+
 // Função para fazer o upload da imagem para o Cloudinary
 const uploadImage = async (file) => {
   try {
@@ -30,7 +43,8 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
 
-    if (!req.file) {
+    const file = upload.single("foto");
+    if (!file) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
@@ -38,8 +52,7 @@ exports.registarUtilizacao = async (req, res) => {
     }
 
     // Fazer o upload da imagem para o Cloudinary
-    const imageUrl = await uploadImage(req.file);
-    console.log(req.file)
+    const imageUrl = await uploadImage(file);
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
