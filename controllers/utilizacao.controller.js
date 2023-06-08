@@ -30,12 +30,12 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
 
-    if (!req.file) {
+  /*   if (!req.file) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
-    }
+    } */
 
     // Fazer o upload da imagem para o Cloudinary
     const imageUrl = await uploadImage(req.file);
