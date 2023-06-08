@@ -41,7 +41,10 @@ exports.registarUtilizacao = async (req, res) => {
     }
 
     // Fazer o upload da imagem para o Cloudinary
-    const imageUrl = await uploadToCloudinary(req.file, "utilizacoes");
+    const imageUrl = await cloudinary.uploader.upload(req.file.path, {
+      folder: "utilizacoes",
+      crop: "scale",
+    })
     console.log(req.file)
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
