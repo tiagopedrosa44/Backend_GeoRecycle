@@ -3,19 +3,7 @@ const express = require("express");
 const utilizacaoController = require("../controllers/utilizacao.controller");
 const authController = require("../controllers/auth.controller");
 
-const multer = require("multer");
 
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, multer.tmpdir());
-  },
-  filename: function(req, file, cb){
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({storage: storage});
 
 
 
@@ -40,7 +28,7 @@ router
     .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
 router
     .route("/:id")
-    .post(upload.single('foto'), authController.verifyToken, utilizacaoController.registarUtilizacao)
+    .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
     .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
 router
     .route("/:idUser")

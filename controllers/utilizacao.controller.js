@@ -10,6 +10,15 @@ cloudinary.config({
   api_key: config.CLOUDINARY_API_KEY,
   api_secret: config.CLOUDINARY_API_SECRET,
 });
+// Função para fazer o upload da imagem para o Cloudinary
+const uploadImage = async (file) => {
+  try {
+    const result = await cloudinary.uploader.upload(file.path);
+    return result.secure_url;
+  } catch (error) {
+    throw new Error("Erro ao fazer upload da imagem para o Cloudinary");
+  }
+};
 
 exports.registarUtilizacao = async (req, res) => {
   try {
@@ -21,24 +30,22 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
 
-    // Verifica se a imagem foi enviada no corpo da solicitação
-    if (!req.files || !req.files.foto) {
+    if (!req.file) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
     }
 
-    // Faz o upload da imagem para o Cloudinary
-    const result = await cloudinary.uploader.upload(req.files.foto.path);
+    // Fazer o upload da imagem para o Cloudinary
+    const imageUrl = await uploadImage(req.file);
 
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
-      foto: result.secure_url, // Usa a URL da imagem do Cloudinary
+      foto: imageUrl,
       data: Date.now(),
     });
-
     await newUtilizacao.save();
 
     res.status(200).json({
@@ -52,7 +59,6 @@ exports.registarUtilizacao = async (req, res) => {
     });
   }
 };
-
 
 // Rota validar utilização
 exports.validarUtilizacao = async (req, res) => {
