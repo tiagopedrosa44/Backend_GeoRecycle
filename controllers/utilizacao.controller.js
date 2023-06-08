@@ -12,26 +12,16 @@ cloudinary.config({
 });
 
 
-const multer = require("multer");
+async function uploadToCloudinary(image, folder) {
+	try {
+		await cloudinary.uploader.upload(image, {
+			folder: folder, crop: "scale"
+		});
+	} catch (err) {
+		console.log(err);
+	}
+}
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: "./uploads",
-    filename: (req, file, cb) => {
-      cb(null, file.originalname);
-    },
-  }),
-});
-
-// Função para fazer o upload da imagem para o Cloudinary
-const uploadImage = async (file) => {
-  try {
-    const result = await cloudinary.uploader.upload(file);
-    return result.secure_url;
-  } catch (error) {
-    throw new Error("Erro ao fazer upload da imagem para o Cloudinary");
-  }
-};
 
 exports.registarUtilizacao = async (req, res) => {
   try {
@@ -43,8 +33,7 @@ exports.registarUtilizacao = async (req, res) => {
       });
     }
 
-    const file = upload.single("foto");
-    if (!file) {
+    if (!req.file) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
@@ -52,7 +41,8 @@ exports.registarUtilizacao = async (req, res) => {
     }
 
     // Fazer o upload da imagem para o Cloudinary
-    const imageUrl = await uploadImage(file);
+    const imageUrl = await uploadToCloudinary(req.file, "utilizacoes");
+    console.log(req.file)
     let newUtilizacao = new Utilizacao({
       idUser: req.body.idUser,
       idEcoponto: idEcoponto,
