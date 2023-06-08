@@ -3,6 +3,10 @@ const config = {
     PASSWORD: process.env.DB_PASSWORD,
     DB: process.env.DB_NAME,
     SECRET : process.env.SECRET,
+
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 }
 
 config.URL = `mongodb+srv://${config.USER}:${config.PASSWORD}@cluster0.smvglxb.mongodb.net/${config.DB}?retryWrites=true&w=majority`;
