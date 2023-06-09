@@ -43,6 +43,7 @@ exports.createEcoponto = async (req, res) => {
     if (req.file) {
       ecoponto_imgage = await cloudinary.uploader.upload(req.file.path);
     }
+    console.log("File")
     let ecopontos = await Ecoponto.findOne({ morada: req.body.morada });
     if (ecopontos) {
       return res.status(400).json({
@@ -50,19 +51,21 @@ exports.createEcoponto = async (req, res) => {
         msg: "Já existe um ecoponto com esta morada.",
       });
     }
+    console.log("Ecoponto")
     if (!req.body.coordenadas) {
       return res.status(400).json({
         success: false,
         error: "Indique uma localização.",
       });
     }
-
+    console.log("Coordenadas")
     if (!req.body.foto) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
     }
+    console.log("Foto2")
     let currentDate = new Date();
     let newEcoponto = new Ecoponto({
       userId: req.loggedUserId,
@@ -72,9 +75,12 @@ exports.createEcoponto = async (req, res) => {
       foto: ecoponto_imgage ? ecoponto_imgage.url : null,
       cloudinary_id: ecoponto_imgage ? ecoponto_imgage.public_id : null,
     });
+    
     await newEcoponto.save();
+    console.log("Save Ecoponto")
     res.status(200).json({ message: "Ecoponto criado com sucesso!" });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: err.message });
   }
 };
