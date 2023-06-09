@@ -59,13 +59,13 @@ exports.createEcoponto = async (req, res) => {
       });
     }
     console.log("Coordenadas")
-    if (!req.body.foto) {
+    /* if (!req.body.foto) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
     }
-    console.log("Foto2")
+    console.log("Foto2") */
     let currentDate = new Date();
     let newEcoponto = new Ecoponto({
       userId: req.loggedUserId,
