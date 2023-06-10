@@ -3,20 +3,17 @@ const express = require("express");
 const ecopontosController = require("../controllers/ecopontos.controller");
 const authController = require("../controllers/auth.controller");
 
-// NEW MULTER
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-}); // save the file to memory first
-const multerUploads = multer({ storage }).single('image'); // specifies the field name multer should go to when it’s looking for the file
+const multer = require("multer");
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/tmp");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
 
-
-
+const multerUpload = multer({ storage: storage }).single("image");
 
 
 let router = express.Router();
@@ -40,7 +37,7 @@ router.use((req, res, next) => {
 router
   .route("/")
   .get(authController.verifyToken, ecopontosController.findAll)
-  .post(multerUploads,authController.verifyToken, ecopontosController.createEcoponto);
+  .post(multerUpload,authController.verifyToken, ecopontosController.createEcoponto);
 
 router
   .route("/pendentes")

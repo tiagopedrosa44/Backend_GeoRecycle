@@ -2,6 +2,13 @@ const db = require("../models");
 const Ecoponto = db.ecopontos;
 const User = db.users;
 const config = require("../config/db.config.js");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: config.CLOUDINARY_CLOUD_NAME,
+  api_key: config.CLOUDINARY_API_KEY,
+  api_secret: config.CLOUDINARY_API_SECRET,
+});
 
 //VER ECOPONTOS
 exports.findAll = async (req, res) => {
@@ -39,10 +46,7 @@ exports.getEcoponto = async (req, res) => {
 //CRIAR NOVO ECOPONTO
 exports.createEcoponto = async (req, res) => {
   try {
-    let ecoponto_imgage = null
-    if (req.file) {
-      ecoponto_imgage = await cloudinary.uploader.upload(req.file.path);
-    }
+    
     let ecopontos = await Ecoponto.findOne({ morada: req.body.morada });
     if (ecopontos) {
       return res.status(400).json({
@@ -50,6 +54,16 @@ exports.createEcoponto = async (req, res) => {
         msg: "Já existe um ecoponto com esta morada.",
       });
     }
+
+    let ecoponto_imgage = null;
+    if (req.file) {
+      ecoponto_imgage = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Ecopontos",
+        crop: "scale",
+      });
+    }
+
+
     if (!req.body.coordenadas) {
       return res.status(400).json({
         success: false,
@@ -69,8 +83,7 @@ exports.createEcoponto = async (req, res) => {
       morada: req.body.morada,
       coordenadas: req.body.coordenadas,
       dataCriacao: currentDate,
-      foto: ecoponto_imgage ? ecoponto_imgage.url : null,
-      cloudinary_id: ecoponto_imgage ? ecoponto_imgage.public_id : null,
+      foto: ecoponto_imgage.secure_url
     });
     await newEcoponto.save();
     res.status(200).json({ message: "Ecoponto criado com sucesso!" });
