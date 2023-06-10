@@ -61,6 +61,11 @@ exports.createEcoponto = async (req, res) => {
         folder: "Ecopontos",
         crop: "scale",
       });
+    } else{
+      return res.status(400).json({
+        success: false,
+        msg: "Coloque uma foto.",
+      });
     }
 
 
