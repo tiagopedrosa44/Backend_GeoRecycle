@@ -84,7 +84,7 @@ exports.createEcoponto = async (req, res) => {
     }
     console.log("Foto2") */
     let newEcoponto = new Ecoponto({
-      userId: req.loggedUserId,
+      userId: req.body.userId,
       morada: req.body.morada,
       coordenadas: req.body.coordenadas,
       dataCriacao: Date.now(),
