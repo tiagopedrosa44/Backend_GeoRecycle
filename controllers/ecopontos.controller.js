@@ -46,7 +46,7 @@ exports.getEcoponto = async (req, res) => {
 //CRIAR NOVO ECOPONTO
 exports.createEcoponto = async (req, res) => {
   try {
-    
+
     let ecopontos = await Ecoponto.findOne({ morada: req.body.morada });
     if (ecopontos) {
       return res.status(400).json({
@@ -70,13 +70,14 @@ exports.createEcoponto = async (req, res) => {
         error: "Indique uma localização.",
       });
     }
-
-    if (!req.body.foto) {
+    console.log("Coordenadas")
+    /* if (!req.body.foto) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
     }
+    console.log("Foto2") */
     let currentDate = new Date();
     let newEcoponto = new Ecoponto({
       userId: req.loggedUserId,
@@ -85,9 +86,12 @@ exports.createEcoponto = async (req, res) => {
       dataCriacao: currentDate,
       foto: ecoponto_imgage.secure_url
     });
+    
     await newEcoponto.save();
+    console.log("Save Ecoponto")
     res.status(200).json({ message: "Ecoponto criado com sucesso!" });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: err.message });
   }
 };
