@@ -4,6 +4,13 @@ const Badges = db.badges;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/db.config.js");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: config.CLOUDINARY_CLOUD_NAME,
+  api_key: config.CLOUDINARY_API_KEY,
+  api_secret: config.CLOUDINARY_API_SECRET,
+});
 
 // CRIAR CONTA
 exports.create = async (req, res) => {
@@ -29,6 +36,7 @@ exports.create = async (req, res) => {
     nome: req.body.nome,
     password: bcrypt.hashSync(req.body.password, 10),
     confirmPassword: req.body.confirmPassword,
+    foto:"/src/assets/imgs/avatar2.png",
     email: req.body.email,
     referral: referralCode,
     referredBy: req.body.referredBy,
@@ -231,8 +239,14 @@ exports.updateUserById = async (req, res) => {
     if (biografia) {
       user.biografia = biografia;
     }
-    if (req.body.foto) {
-      user.foto = foto;
+
+    let user_image = null;
+    if (req.file) {
+      user_image = await cloudinary.uploader.upload(req.file.path, {
+        folder: "ProfilePictures",
+        crop: "scale",
+      });
+      user.foto = user_image.secure_url;
     }
 
     await user.save();
