@@ -78,12 +78,11 @@ exports.createEcoponto = async (req, res) => {
       });
     }
     console.log("Foto2") */
-    let currentDate = new Date();
     let newEcoponto = new Ecoponto({
       userId: req.loggedUserId,
       morada: req.body.morada,
       coordenadas: req.body.coordenadas,
-      dataCriacao: currentDate,
+      dataCriacao: Date.now(),
       foto: ecoponto_imgage.secure_url
     });
     
