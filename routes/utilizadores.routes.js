@@ -39,9 +39,13 @@ router
   .post(userController.login);
 router
   .route("/:id")
-  .patch(multerUpload,authController.verifyToken,userController.updateUserById)
+  .patch(authController.verifyToken,userController.updateUserById)
   .get(authController.verifyToken,userController.getUser)
   .delete(authController.verifyToken,userController.deleteUser);
+
+router
+  .route("/:id/foto")
+  .patch(authController.verifyToken,multerUpload,userController.updateUserPhotoById)
 router
   .route("/:id/badges")
   .get(authController.verifyToken,userController.getBadgesUser)

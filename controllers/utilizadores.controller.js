@@ -204,7 +204,7 @@ exports.getAllUsers = async (req, res) => {
 // ROTA UPDATE DO USER POR ID
 exports.updateUserById = async (req, res) => {
   const userId = req.params.id;
-  const { password, confirmPassword, biografia, foto } = req.body;
+  const { password, confirmPassword, biografia } = req.body;
 
   // Verifica se o ID do utilizador na solicitação corresponde ao ID do utilizador autenticado
   if (userId !== req.loggedUserId) {
@@ -239,6 +239,28 @@ exports.updateUserById = async (req, res) => {
     if (biografia) {
       user.biografia = biografia;
     }
+    await user.save();
+    res.status(200).json({ message: "Utilizador atualizado com sucesso!" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Rota para atualizar foto de perfil
+exports.updateUserPhotoById = async (req, res) => {
+  const userId = req.params.id;
+
+  // Verifica se o ID do utilizador na solicitação corresponde ao ID do utilizador autenticado
+  if (userId !== req.loggedUserId) {
+    return res.status(403).json({ message: "Não autorizado" });
+  }
+
+  try{
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Utilizador não encontrado!" });
+    }
+
 
     let user_image = null;
     if (req.file) {
@@ -247,14 +269,19 @@ exports.updateUserById = async (req, res) => {
         crop: "scale",
       });
       user.foto = user_image.secure_url;
+    } else{
+      return res.status(400).json({ message: "Indique uma foto!" });
     }
-
     await user.save();
-    res.status(200).json({ message: "Utilizador atualizado com sucesso!" });
-  } catch (err) {
+    res.status(200).json({ message: "Foto de perfil atualizada com sucesso!" });
+
+
+  } catch (error){
     res.status(500).json({ message: err.message });
+
   }
-};
+  
+}
 
 // ROTA PARA VER UM UTILIZADOR POR ID
 exports.getUser = async (req, res) => {
