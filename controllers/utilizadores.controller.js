@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
     nome: req.body.nome,
     password: bcrypt.hashSync(req.body.password, 10),
     confirmPassword: req.body.confirmPassword,
-    foto:"/src/assets/imgs/avatar2.png",
+    foto:"https://res.cloudinary.com/djoiers7m/image/upload/v1686417535/ProfilePictures/avatar_lzpyzw.png",
     email: req.body.email,
     referral: referralCode,
     referredBy: req.body.referredBy,
