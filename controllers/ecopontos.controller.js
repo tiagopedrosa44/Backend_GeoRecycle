@@ -177,9 +177,12 @@ exports.getEcopontosPorValidar = async (req, res) => {
         error: "Não existem ecopontos por validar.",
       });
     }
+    let users = await User.find(ecopontos.map((ecoponto) => ecoponto.userId));
+
     res.status(200).json({
       success: true,
       ecopontos: ecopontos,
+      users: users,
     });
   }
   catch (err) {
