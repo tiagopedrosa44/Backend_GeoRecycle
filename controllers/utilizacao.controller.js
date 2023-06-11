@@ -87,6 +87,17 @@ exports.validarUtilizacao = async (req, res) => {
         user.moedas += 1000;
         user.numUsoEcopontos += 1;
         ecoponto.utilizacoes += 1;
+        
+        if (user.numUsoEcopontos >= 10 && !user.badges.includes("6453da2688725a0e466c1064")) {
+          user.badges.push("6453da2688725a0e466c1064");
+        }
+        if (user.numUsoEcopontos >= 25 && !user.badges.includes("6470b434dd9dfe2550462a30")) {
+          user.badges.push("6470b434dd9dfe2550462a30");
+        }
+        if (user.numUsoEcopontos >= 50 && !user.badges.includes("647d0218303c655af719c5f9")) {
+          user.badges.push("647d0218303c655af719c5f9");
+        }
+        
         await user.save();
         await ecoponto.save();
       }
