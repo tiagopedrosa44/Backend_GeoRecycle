@@ -22,8 +22,8 @@ app.get("*", function (req, res) {
 });
 
 
-const server = app.listen(port,  () =>
-  console.log(`App listening at port 3000`)
+const server = app.listen(3000,  () =>
+console.log(`App listening at 3000`)
 );
 
 module.exports = {app, server}
