@@ -22,7 +22,7 @@ app.get("*", function (req, res) {
 });
 
 
-const server = app.listen(3000,  () =>
+app.listen(3000,  () =>
 console.log(`App listening at 3000`)
 );
 
