@@ -23,7 +23,7 @@ app.get("*", function (req, res) {
 
 
 const server = app.listen(port,  () =>
-  console.log(`App listening at http://${host}:${port}`)
+  console.log(`App listening at port 3000`)
 );
 
 module.exports = {app, server}
