@@ -140,7 +140,7 @@ exports.login = async (req, res) => {
       user.password
     );
     if (!passwordIsValid)
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         acessToken: null,
         message: "Password inválida",
