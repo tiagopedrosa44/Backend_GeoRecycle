@@ -2,6 +2,13 @@ const db = require("../models");
 const Ecoponto = db.ecopontos;
 const User = db.users;
 const config = require("../config/db.config.js");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: config.CLOUDINARY_CLOUD_NAME,
+  api_key: config.CLOUDINARY_API_KEY,
+  api_secret: config.CLOUDINARY_API_SECRET,
+});
 
 //VER ECOPONTOS
 exports.findAll = async (req, res) => {
@@ -39,6 +46,7 @@ exports.getEcoponto = async (req, res) => {
 //CRIAR NOVO ECOPONTO
 exports.createEcoponto = async (req, res) => {
   try {
+
     let ecopontos = await Ecoponto.findOne({ morada: req.body.morada });
     if (ecopontos) {
       return res.status(400).json({
@@ -46,30 +54,48 @@ exports.createEcoponto = async (req, res) => {
         msg: "Já existe um ecoponto com esta morada.",
       });
     }
+
+    let ecoponto_imgage = null;
+    if (req.file) {
+      ecoponto_imgage = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Ecopontos",
+        crop: "scale",
+      });
+    } else{
+      return res.status(400).json({
+        success: false,
+        msg: "Coloque uma foto.",
+      });
+    }
+
+
     if (!req.body.coordenadas) {
       return res.status(400).json({
         success: false,
         error: "Indique uma localização.",
       });
     }
-
-    if (!req.body.foto) {
+    console.log("Coordenadas")
+    /* if (!req.body.foto) {
       return res.status(400).json({
         success: false,
         error: "Coloque uma foto.",
       });
     }
-    let currentDate = new Date();
+    console.log("Foto2") */
     let newEcoponto = new Ecoponto({
-      userId: req.loggedUserId,
+      userId: req.body.userId,
       morada: req.body.morada,
       coordenadas: req.body.coordenadas,
-      dataCriacao: currentDate,
-      foto: req.body.foto,
+      dataCriacao: Date.now(),
+      foto: ecoponto_imgage.secure_url
     });
+    
     await newEcoponto.save();
+    console.log("Save Ecoponto")
     res.status(200).json({ message: "Ecoponto criado com sucesso!" });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: err.message });
   }
 };
@@ -151,6 +177,8 @@ exports.getEcopontosPorValidar = async (req, res) => {
         error: "Não existem ecopontos por validar.",
       });
     }
+  
+
     res.status(200).json({
       success: true,
       ecopontos: ecopontos,

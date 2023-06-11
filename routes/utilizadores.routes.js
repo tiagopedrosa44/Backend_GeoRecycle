@@ -15,6 +15,18 @@ router.use((req, res, next) => {
   });
   next();
 });
+
+const multer = require("multer");
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/tmp");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const multerUpload = multer({ storage: storage }).single("image");
 // ROUTES
 router 
   .route("/")
@@ -30,6 +42,10 @@ router
   .patch(authController.verifyToken,userController.updateUserById)
   .get(authController.verifyToken,userController.getUser)
   .delete(authController.verifyToken,userController.deleteUser);
+
+router
+  .route("/:id/foto")
+  .patch(authController.verifyToken,multerUpload,userController.updateUserPhotoById)
 router
   .route("/:id/badges")
   .get(authController.verifyToken,userController.getBadgesUser)

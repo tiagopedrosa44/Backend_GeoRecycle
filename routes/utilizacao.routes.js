@@ -1,8 +1,13 @@
 const express = require("express");
-let router = express.Router();
+
 const utilizacaoController = require("../controllers/utilizacao.controller");
 const authController = require("../controllers/auth.controller");
 
+
+
+
+
+let router = express.Router();
 // middleware for all routes related with utilizacao
 router.use((req, res, next) => {
   const start = Date.now();
@@ -15,13 +20,27 @@ router.use((req, res, next) => {
   });
   next();
 });
+
+
+const multer = require("multer");
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/tmp");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const multerUpload = multer({ storage: storage }).single("image");
+
 // ROUTES
 router
     .route("/pendentes")
     .get(authController.verifyToken, utilizacaoController.getUtilizacoesPendentes) 
 router
     .route("/:id")
-    .post(authController.verifyToken, utilizacaoController.registarUtilizacao)
+    .post(multerUpload,authController.verifyToken, utilizacaoController.registarUtilizacao)
     .put(authController.verifyToken, utilizacaoController.validarUtilizacao)
 router
     .route("/:idUser")

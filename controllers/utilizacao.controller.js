@@ -3,8 +3,18 @@ const Utilizacao = db.utilizacaos;
 const User = db.users;
 const Ecoponto = db.ecopontos;
 const config = require("../config/db.config.js");
+const cloudinary = require("cloudinary").v2;
 
-// Registar utilização de ecoponto
+cloudinary.config({
+  cloud_name: config.CLOUDINARY_CLOUD_NAME,
+  api_key: config.CLOUDINARY_API_KEY,
+  api_secret: config.CLOUDINARY_API_SECRET,
+});
+
+
+
+
+
 exports.registarUtilizacao = async (req, res) => {
   try {
     let idEcoponto = req.params.id;
@@ -14,22 +24,26 @@ exports.registarUtilizacao = async (req, res) => {
         error: "Indique o id do ecoponto.",
       });
     }
-    if (!req.body.foto) {
-      return res.status(400).json({
-        success: false,
-        error: "Coloque uma foto.",
+
+    let utilizacao_image = null;
+    if (req.file) {
+      utilizacao_image = await cloudinary.uploader.upload(req.file.path, {
+        folder: "utilizacoes",
+        crop: "scale",
       });
     }
+
     let newUtilizacao = new Utilizacao({
-      idUser: req.loggedUserId,
+      idUser: req.body.idUser,
       idEcoponto: idEcoponto,
-      foto: req.body.foto,
+      foto: utilizacao_image.secure_url,
       data: Date.now(),
     });
     await newUtilizacao.save();
+
     res.status(200).json({
       success: true,
-      msg: "Utilização registada com sucesso.",
+      msg: 'Utilização registada com sucesso.',
     });
   } catch (err) {
     res.status(500).json({
@@ -63,8 +77,13 @@ exports.validarUtilizacao = async (req, res) => {
       });
     }
 
-    if (!req.body.vistoAdmin || !req.body.utilizacaoAprovada) {
-      return res.status(400).json({ error: "Campos por preencher." });
+    if (!req.body.utilizacaoAprovada) {
+      //apagar utilização
+      await Utilizacao.findByIdAndDelete(idUtilizacao);
+      return res.status(200).json({
+        success: true,
+        msg: "Utilização apagada com sucesso ",
+      });
     }
 
     let utilizacao = await Utilizacao.findById(idUtilizacao);
@@ -75,7 +94,7 @@ exports.validarUtilizacao = async (req, res) => {
       });
     }
 
-    utilizacao.vistoAdmin = req.body.vistoAdmin;
+    utilizacao.vistoAdmin = true;
     utilizacao.utilizacaoAprovada = req.body.utilizacaoAprovada;
     await utilizacao.save();
 
@@ -143,22 +162,23 @@ exports.getUtilizacoesPendentes = async (req, res) => {
 };
 
 exports.getUtilizaçoesByUser = async (req, res) => {
-  try{
+  try {
     let user = await User.findById(req.params.idUser);
-    let utilizacoes = await Utilizacao.find({
-      idUser: user,
-      vistoAdmin: true,
-      utilizacaoAprovada: true,
-    },
-    {foto:1,_id:0 }
+    let utilizacoes = await Utilizacao.find(
+      {
+        idUser: user,
+        vistoAdmin: true,
+        utilizacaoAprovada: true,
+      },
+      { foto: 1, _id: 0 }
     );
-    if(req.loggedUserId !== req.params.idUser){
+    if (req.loggedUserId !== req.params.idUser) {
       return res.status(403).json({
         success: false,
         msg: "Não tenho premissão para ver estas utilizações.",
       });
     }
-    if(utilizacoes.length === 0){
+    if (utilizacoes.length === 0) {
       return res.status(404).json({
         success: false,
         error: "Não existe nenhuma utilização!",
@@ -168,13 +188,10 @@ exports.getUtilizaçoesByUser = async (req, res) => {
       success: true,
       utilizacoes: utilizacoes,
     });
-
   } catch (err) {
     res.status(500).json({
       success: false,
       msg: err.message || "Algo correu mal, tente novamente mais tarde.",
     });
   }
-}
-
-
+};

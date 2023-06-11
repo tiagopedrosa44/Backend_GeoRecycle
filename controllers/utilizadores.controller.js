@@ -4,6 +4,13 @@ const Badges = db.badges;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/db.config.js");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: config.CLOUDINARY_CLOUD_NAME,
+  api_key: config.CLOUDINARY_API_KEY,
+  api_secret: config.CLOUDINARY_API_SECRET,
+});
 
 // CRIAR CONTA
 exports.create = async (req, res) => {
@@ -29,6 +36,7 @@ exports.create = async (req, res) => {
     nome: req.body.nome,
     password: bcrypt.hashSync(req.body.password, 10),
     confirmPassword: req.body.confirmPassword,
+    foto:"https://res.cloudinary.com/djoiers7m/image/upload/v1686417535/ProfilePictures/avatar_lzpyzw.png",
     email: req.body.email,
     referral: referralCode,
     referredBy: req.body.referredBy,
@@ -196,7 +204,7 @@ exports.getAllUsers = async (req, res) => {
 // ROTA UPDATE DO USER POR ID
 exports.updateUserById = async (req, res) => {
   const userId = req.params.id;
-  const { password, confirmPassword, biografia, foto } = req.body;
+  const { password, confirmPassword, biografia } = req.body;
 
   // Verifica se o ID do utilizador na solicitação corresponde ao ID do utilizador autenticado
   if (userId !== req.loggedUserId) {
@@ -231,16 +239,49 @@ exports.updateUserById = async (req, res) => {
     if (biografia) {
       user.biografia = biografia;
     }
-    if (req.body.foto) {
-      user.foto = foto;
-    }
-
     await user.save();
     res.status(200).json({ message: "Utilizador atualizado com sucesso!" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
+// Rota para atualizar foto de perfil
+exports.updateUserPhotoById = async (req, res) => {
+  const userId = req.params.id;
+
+  // Verifica se o ID do utilizador na solicitação corresponde ao ID do utilizador autenticado
+  if (userId !== req.loggedUserId) {
+    return res.status(403).json({ message: "Não autorizado" });
+  }
+
+  try{
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Utilizador não encontrado!" });
+    }
+
+
+    let user_image = null;
+    if (req.file) {
+      user_image = await cloudinary.uploader.upload(req.file.path, {
+        folder: "ProfilePictures",
+        crop: "scale",
+      });
+      user.foto = user_image.secure_url;
+    } else{
+      return res.status(400).json({ message: "Indique uma foto!" });
+    }
+    await user.save();
+    res.status(200).json({ message: "Foto de perfil atualizada com sucesso!" });
+
+
+  } catch (error){
+    res.status(500).json({ message: err.message });
+
+  }
+  
+}
 
 // ROTA PARA VER UM UTILIZADOR POR ID
 exports.getUser = async (req, res) => {
