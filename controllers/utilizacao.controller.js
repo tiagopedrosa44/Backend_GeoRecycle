@@ -62,12 +62,6 @@ exports.validarUtilizacao = async (req, res) => {
         msg: "Tem que estar autenticado como admin",
       });
 
-    if (req.body.vistoAdmin == true) {
-      return res.status(400).json({
-        success: false,
-        error: "Utilização já foi validada.",
-      });
-    }
 
     let idUtilizacao = req.params.id;
     if (!idUtilizacao) {
@@ -92,7 +86,12 @@ exports.validarUtilizacao = async (req, res) => {
         success: false,
         error: "Utilização não encontrada.",
       });
-    }
+    } else if (utilizacao.vistoAdmin) {
+      return res.status(400).json({
+        success: false,
+        error: "Utilização já foi validada.",
+      });
+    } 
 
     utilizacao.vistoAdmin = true;
     utilizacao.utilizacaoAprovada = req.body.utilizacaoAprovada;
