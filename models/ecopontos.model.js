@@ -3,7 +3,10 @@ module.exports = (mongoose) => {
         {
             userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
             morada: { type: String, required: true },
-            coordenadas: { type: Object, required: true },
+            coordenadas: {
+                lat: { type: Number, required: true},
+                lng: { type: Number,  required: true}
+              }, 
             utilizacoes: { type: Number, default: 0 },
             vezesRegistado: { type: Number, default: 0 },
             dataCriacao: { type: Date },

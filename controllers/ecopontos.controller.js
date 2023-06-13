@@ -83,10 +83,15 @@ exports.createEcoponto = async (req, res) => {
       });
     }
     console.log("Foto2") */
+    let lat = parseFloat(req.body.coodenadas.lat)
+    let lng = parseFloat(req.body.coodenadas.lng)
     let newEcoponto = new Ecoponto({
       userId: req.body.userId,
       morada: req.body.morada,
-      coordenadas: req.body.coordenadas,
+      coordenadas: {
+        lat: lat,
+        lng: lng
+      },
       dataCriacao: Date.now(),
       foto: ecoponto_imgage.secure_url
     });
