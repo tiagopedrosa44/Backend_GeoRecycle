@@ -72,7 +72,11 @@ exports.validarUtilizacao = async (req, res) => {
 
     if (!req.body.utilizacaoAprovada) {
       //apagar utilização
-      await Utilizacao.findByIdAndDelete(idUtilizacao);
+      const utilizacao = await Utilizacao.findByIdAndDelete(idUtilizacao);
+        if(utilizacao.foto){
+          let public_id = utilizacao.foto.split("/").pop().split(".")[0];
+          await cloudinary.uploader.destroy(public_id);
+        }
       return res.status(200).json({
         success: true,
         msg: "Utilização apagada com sucesso ",
