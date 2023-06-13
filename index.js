@@ -20,6 +20,8 @@ app.use('/badges', require('./routes/badges.routes.js'))
 app.get("*", function (req, res) {
   res.status(404).json({ message: "WHAT???" });
 });
-app.listen(3000,  () =>
-  console.log(`App listening at 3000`)
+const server = app.listen(port,  () =>
+  console.log(`App listening at http://${host}:${port}/`)
 );
+
+module.exports = { app, server };
