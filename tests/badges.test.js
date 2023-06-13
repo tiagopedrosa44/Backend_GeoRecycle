@@ -57,54 +57,48 @@ describe("Login utilizador", () => {
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
 });
-let utilizacaoID = "64862591326daa67621afcac";
-describe("Valida uma utilização", () => {
-  it("deve validar uma utilização", async () => {
-    const res = await request(app)
-      .put(`/utilizacao/${utilizacaoID}`)
-      .set("Authorization", `Bearer ${token2}`)
-      .send({
-        vistoAdmin: true,
-        utilizacaoAprovada: true,
-      });
-    expect(res.statusCode).toBe(200);
-    expect(res.body.msg).toBe("Utilização validada com sucesso.");
-  });
+/* NOT WORKING */
+/* let badgeID = "6453da2688725a0e466c1064";
+describe("editar badge", () => {
+    it("deve editar uma badge", async () => {
+        const res = await request(app)
+        .put(`/badges/${badgeID}`)
+        .set("Authorization", `Bearer ${token2}`)
+        .send({
+            nome: "Utilizador Regularrr",
+        });
+        expect(res.body.msg).toBe("Badge atualizada com sucesso");
+    });
+}); */
+
+describe("get all badges", () => {
+    it("deve retornar todas as badges", async () => {
+        const res = await request(app)
+            .get("/badges")
+            .set("Authorization", `Bearer ${token2}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body.msg).toBe("Badges encontradas");
+    });
+    it("deve dar erro de autenticação", async () => {
+        const res = await request(app)
+            .get("/badges")
+            .set("Authorization", `Bearer ${token}`);
+        expect(res.statusCode).toBe(403);
+        expect(res.body.msg).toBe("Tem que estar autenticado como admin");
+    });
 });
 
 
-describe("Get utilizações pendentes",( )=>{
-    it("deve retornar as utilizações pendentes", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token2}`);
-        expect(res.statusCode).toBe(200);
-    })
-    it("deve retornar erro de autenticação", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(401);
-    })
-})
 
 
-describe("Get utilizações por utilizador",( )=>{
-    it("nenhuma utilização registada", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/${userID}`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(404);
-        expect(res.body.error).toBe("Não existe nenhuma utilização!");
-    })
-})
 
 describe("delete User", () => {
-  it("deve eliminar um utilizador", async () => {
-    const res = await request(app)
-      .delete(`/utilizadores/${userID}`)
-      .set("Authorization", `Bearer ${token2}`);
-    expect(res.statusCode).toBe(200);
-    expect(res.body.msg).toBe("Utilizador apagado com sucesso");
+    it("deve eliminar um utilizador", async () => {
+      const res = await request(app)
+        .delete(`/utilizadores/${userID}`)
+        .set("Authorization", `Bearer ${token2}`);
+      expect(res.statusCode).toBe(200);
+      expect(res.body.msg).toBe("Utilizador apagado com sucesso");
+    });
   });
-});
+  

@@ -57,47 +57,64 @@ describe("Login utilizador", () => {
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
 });
-let utilizacaoID = "64862591326daa67621afcac";
-describe("Valida uma utilização", () => {
-  it("deve validar uma utilização", async () => {
+
+describe("get items store Admin", () => {
+  it("should return all items", async () => {
     const res = await request(app)
-      .put(`/utilizacao/${utilizacaoID}`)
-      .set("Authorization", `Bearer ${token2}`)
-      .send({
-        vistoAdmin: true,
-        utilizacaoAprovada: true,
-      });
+      .get("/loja/admin")
+      .set("Authorization", `Bearer ${token2}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body.msg).toBe("Utilização validada com sucesso.");
+    expect(res.body.success).toBe(true);
+    expect(res.body.msg).toBe("Items retornados com sucesso");
+  });
+  it("should return error 403", async () => {
+    const res = await request(app)
+      .get("/loja/admin")
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.statusCode).toBe(403);
+    expect(res.body.success).toBe(false);
+    expect(res.body.msg).toBe("Tem que estar autenticado como admin");
   });
 });
 
+describe("get items store ", () => {
+  it("should return all items", async () => {
+    const res = await request(app)
+      .get("/loja")
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.msg).toBe("Items retornados com sucesso");
+  });
+});
 
-describe("Get utilizações pendentes",( )=>{
-    it("deve retornar as utilizações pendentes", async()=>{
+let itemID= "646885b2efe016ae6622707d"
+
+describe("update item", () => {
+    it("should update item", async () => {
         const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token2}`);
+            .patch(`/loja/${itemID}`)
+            .set("Authorization", `Bearer ${token2}`)
+            .send({
+            stock: 10,
+            });
         expect(res.statusCode).toBe(200);
-    })
-    it("deve retornar erro de autenticação", async()=>{
+        expect(res.body.success).toBe(true);
+        expect(res.body.msg).toBe("Item atualizado com sucesso");
+    });
+    it("should return error 403", async () => {
         const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(401);
-    })
-})
+            .patch(`/loja/${itemID}`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+            stock: 10,
+            });
+        expect(res.statusCode).toBe(403);
+        expect(res.body.success).toBe(false);
+        expect(res.body.msg).toBe("Tem que estar autenticado como admin");
+    });
+});
 
-
-describe("Get utilizações por utilizador",( )=>{
-    it("nenhuma utilização registada", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/${userID}`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(404);
-        expect(res.body.error).toBe("Não existe nenhuma utilização!");
-    })
-})
 
 describe("delete User", () => {
   it("deve eliminar um utilizador", async () => {

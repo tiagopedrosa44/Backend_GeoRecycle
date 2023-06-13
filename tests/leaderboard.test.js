@@ -57,47 +57,26 @@ describe("Login utilizador", () => {
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
 });
-let utilizacaoID = "64862591326daa67621afcac";
-describe("Valida uma utilização", () => {
-  it("deve validar uma utilização", async () => {
+
+describe("get leaderboard pontos", () => {
+  it("deve retornar leaderboard por pontos", async () => {
     const res = await request(app)
-      .put(`/utilizacao/${utilizacaoID}`)
-      .set("Authorization", `Bearer ${token2}`)
-      .send({
-        vistoAdmin: true,
-        utilizacaoAprovada: true,
-      });
+      .get("/leaderboard/pontos")
+      .set("Authorization", `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body.msg).toBe("Utilização validada com sucesso.");
+    expect(res.body.success).toBe("Utilizadores retornados com sucesso");
   });
 });
 
-
-describe("Get utilizações pendentes",( )=>{
-    it("deve retornar as utilizações pendentes", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token2}`);
-        expect(res.statusCode).toBe(200);
-    })
-    it("deve retornar erro de autenticação", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(401);
-    })
-})
-
-
-describe("Get utilizações por utilizador",( )=>{
-    it("nenhuma utilização registada", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/${userID}`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(404);
-        expect(res.body.error).toBe("Não existe nenhuma utilização!");
-    })
-})
+describe("get leaderboard ecopontos", () => {
+  it("deve retornar leaderboard por ecopontos", async () => {
+    const res = await request(app)
+      .get("/leaderboard/ecopontos")
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe("Utilizadores retornados com sucesso");
+  });
+});
 
 describe("delete User", () => {
   it("deve eliminar um utilizador", async () => {
