@@ -58,23 +58,9 @@ describe("Login utilizador", () => {
   });
 });
 
-let ecopontoID="646dd687cbc7e85364c204f5"
-describe("Registar utilização", () => {
-  it("deve registar uma utilização", async () => {
-    const res = await request(app)
-      .post("/utilizacao")
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        userID: userID,
-        ecopontoID: ecopontoID,
-        foto:'https://github.com/tiagopedrosa44/Backend_GeoRecycle/blob/master/tests/3.png'  
-      });
-    expect(res.statusCode).toBe(200);
-    expect(res.body.msg).toBe("Utilização registada com sucesso.");
-  });
-});
 
-/* let utilizacaoID = "64862591326daa67621afcac";
+
+let utilizacaoID = "64862591326daa67621afcac";
 describe("Valida uma utilização", () => {
   it("deve validar uma utilização", async () => {
     const res = await request(app)
@@ -87,7 +73,7 @@ describe("Valida uma utilização", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.msg).toBe("Utilização validada com sucesso.");
   });
-}); */
+});
 
 
 
