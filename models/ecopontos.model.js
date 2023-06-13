@@ -5,7 +5,7 @@ module.exports = (mongoose) => {
             morada: { type: String, required: true },
             coordenadas: {
                 lat: { type: Number, required: true},
-                lng: { type: Number,  required: true}
+                lon: { type: Number,  required: true}
               }, 
             utilizacoes: { type: Number, default: 0 },
             vezesRegistado: { type: Number, default: 0 },
