@@ -58,66 +58,49 @@ describe("Login utilizador", () => {
   });
 });
 
-let ecopontoID="646dd687cbc7e85364c204f5"
-describe("Registar utilização", () => {
-  it("deve registar uma utilização", async () => {
+describe("ver ecopontos", () => {
+  it("deve ver todos os ecopontos", async () => {
     const res = await request(app)
-      .post("/utilizacao")
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        userID: userID,
-        ecopontoID: ecopontoID,
-        foto:'https://github.com/tiagopedrosa44/Backend_GeoRecycle/blob/master/tests/3.png'  
-      });
+      .get("/ecopontos")
+      .set("Authorization", `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body.msg).toBe("Utilização registada com sucesso.");
   });
 });
 
-/* let utilizacaoID = "64862591326daa67621afcac";
-describe("Valida uma utilização", () => {
-  it("deve validar uma utilização", async () => {
+let ecopontoID = "64883a0b8995a026b6e3a9f1";
+describe("ver ecoponto por id", () => {
+  it("deve ver ecoponto por id", async () => {
     const res = await request(app)
-      .put(`/utilizacao/${utilizacaoID}`)
-      .set("Authorization", `Bearer ${token2}`)
-      .send({
-        vistoAdmin: true,
-        utilizacaoAprovada: true,
-      });
+      .get(`/ecopontos/${ecopontoID}`)
+      .set("Authorization", `Bearer ${token}`)
     expect(res.statusCode).toBe(200);
-    expect(res.body.msg).toBe("Utilização validada com sucesso.");
   });
-}); */
+});
 
 
 
-
-
-describe("Get utilizações pendentes",( )=>{
-    it("deve retornar as utilizações pendentes", async()=>{
+/* describe('Validar ecoponto', () => {
+    it('deve validar um ecoponto', async () => {
         const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token2}`);
-        expect(res.statusCode).toBe(200);
+            .put(`/ecopontos/${ecopontoID}`)
+            .set('Authorization', `Bearer ${token2}`)
+            .send({
+                ecopontoAprovado: true
+            });
+        expect(res.statusCode).toBe(200)
     })
-    it("deve retornar erro de autenticação", async()=>{
-        const res = await request(app)
-        .get(`/utilizacao/pendentes`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(401);
-    })
-})
+}) */
 
-
-describe("Get utilizações por utilizador",( )=>{
-    it("nenhuma utilização registada", async()=>{
+describe('Obter ecopontos por validar', () => {
+    it('deve obter ecopontos por validar', async () => {
         const res = await request(app)
-        .get(`/utilizacao/${userID}`)
-        .set("Authorization", `Bearer ${token}`);
-        expect(res.statusCode).toBe(404);
-        expect(res.body.error).toBe("Não existe nenhuma utilização!");
+            .get('/ecopontos/pendentes')
+            .set('Authorization', `Bearer ${token2}`)
+        expect(res.statusCode).toBe(200)	
     })
 })
+
+
 
 describe("delete User", () => {
   it("deve eliminar um utilizador", async () => {
@@ -128,3 +111,5 @@ describe("delete User", () => {
     expect(res.body.msg).toBe("Utilizador apagado com sucesso");
   });
 });
+
+
