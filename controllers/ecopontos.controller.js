@@ -76,15 +76,9 @@ exports.createEcoponto = async (req, res) => {
       });
     }
     console.log("Coordenadas")
-    /* if (!req.body.foto) {
-      return res.status(400).json({
-        success: false,
-        error: "Coloque uma foto.",
-      });
-    }
-    console.log("Foto2") */
-    let lat = parseFloat(req.body.coodenadas.lat)
-    let lng = parseFloat(req.body.coodenadas.lng)
+    
+    let lat = Number(req.body.coordenadas.lat);
+    let lng = Number(req.body.coordenadas.lng);
     let newEcoponto = new Ecoponto({
       userId: req.body.userId,
       morada: req.body.morada,
