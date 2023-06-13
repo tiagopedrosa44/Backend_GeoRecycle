@@ -62,7 +62,6 @@ exports.validarUtilizacao = async (req, res) => {
         msg: "Tem que estar autenticado como admin",
       });
 
-
     let idUtilizacao = req.params.id;
     if (!idUtilizacao) {
       return res.status(400).json({
