@@ -31,6 +31,11 @@ exports.registarUtilizacao = async (req, res) => {
         folder: "utilizacoes",
         crop: "scale",
       });
+    } else{
+      return res.status(400).json({
+        success: false,
+        error: "Indique uma foto.",
+      });
     }
 
     let newUtilizacao = new Utilizacao({
