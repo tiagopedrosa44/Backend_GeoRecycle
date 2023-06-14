@@ -45,7 +45,7 @@ router
 
 router
   .route("/:id/foto")
-  .patch(authController.verifyToken,multerUpload,userController.updateUserPhotoById)
+  .patch(multerUpload,authController.verifyToken,userController.updateUserPhotoById)
 router
   .route("/:id/badges")
   .get(authController.verifyToken,userController.getBadgesUser)
