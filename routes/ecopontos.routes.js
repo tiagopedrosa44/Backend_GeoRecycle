@@ -47,7 +47,7 @@ router
   .route("/:id")
   .get(authController.verifyToken, ecopontosController.getEcoponto)
   .put(authController.verifyToken, ecopontosController.validarEcoponto)
-  .put(authController.verifyToken, ecopontosController.editarEcoponto);
+  .patch(authController.verifyToken, ecopontosController.editarEcoponto);
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
