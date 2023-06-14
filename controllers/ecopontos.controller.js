@@ -78,13 +78,13 @@ exports.createEcoponto = async (req, res) => {
     console.log("Coordenadas")
     
     let lat = Number(req.body.coordenadas.lat);
-    let lng = Number(req.body.coordenadas.lng);
+    let lon = Number(req.body.coordenadas.lon);
     let newEcoponto = new Ecoponto({
       userId: req.body.userId,
       morada: req.body.morada,
       coordenadas: {
         lat: lat,
-        lng: lng
+        lon: lon
       },
       dataCriacao: Date.now(),
       foto: ecoponto_imgage.secure_url
