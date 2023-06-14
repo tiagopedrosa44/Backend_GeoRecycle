@@ -37,7 +37,7 @@ router.use((req, res, next) => {
 router
   .route("/")
   .get(authController.verifyToken, ecopontosController.findAll)
-  .post(multerUpload,authController.verifyToken, ecopontosController.createEcoponto);
+  .post(multerUpload, authController.verifyToken, ecopontosController.createEcoponto);
 
 router
   .route("/pendentes")
@@ -46,7 +46,8 @@ router
 router
   .route("/:id")
   .get(authController.verifyToken, ecopontosController.getEcoponto)
-  .put(authController.verifyToken, ecopontosController.validarEcoponto);
+  .put(authController.verifyToken, ecopontosController.validarEcoponto)
+  .put(authController.verifyToken, ecopontosController.editarEcoponto);
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });

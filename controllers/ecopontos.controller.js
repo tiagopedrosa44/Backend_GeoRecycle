@@ -13,7 +13,7 @@ cloudinary.config({
 //VER ECOPONTOS
 exports.findAll = async (req, res) => {
   try {
-    let data = await Ecoponto.find({ecopontoAprovado:true}, { morada: 1, coordenadas: 1, _id: 1 });
+    let data = await Ecoponto.find({ ecopontoAprovado: true }, { morada: 1, coordenadas: 1, _id: 1 });
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
@@ -61,7 +61,7 @@ exports.createEcoponto = async (req, res) => {
         folder: "Ecopontos",
         crop: "scale",
       });
-    } else{
+    } else {
       return res.status(400).json({
         success: false,
         msg: "Coloque uma foto.",
@@ -76,7 +76,7 @@ exports.createEcoponto = async (req, res) => {
       });
     }
     console.log("Coordenadas")
-    
+
     let lat = Number(req.body.coordenadas.lat);
     let lon = Number(req.body.coordenadas.lon);
     let newEcoponto = new Ecoponto({
@@ -89,7 +89,7 @@ exports.createEcoponto = async (req, res) => {
       dataCriacao: Date.now(),
       foto: ecoponto_imgage.secure_url
     });
-    
+
     await newEcoponto.save();
     console.log("Save Ecoponto")
     res.status(200).json({ message: "Ecoponto criado com sucesso!" });
@@ -169,14 +169,14 @@ exports.getEcopontosPorValidar = async (req, res) => {
       });
 
     let ecopontos = await Ecoponto.find({ vistoAdmin: false });
-    
+
     if (ecopontos.length === 0) {
       return res.status(404).json({
         success: false,
         error: "Não existem ecopontos por validar.",
       });
     }
-  
+
 
     res.status(200).json({
       success: true,
@@ -190,3 +190,42 @@ exports.getEcopontosPorValidar = async (req, res) => {
     });
   }
 };
+
+exports.editarEcoponto = async (req, res) => {
+  try {
+    if (req.loggedUserType !== "admin")
+      return res.status(401).json({
+        success: false,
+        msg: "Tem que estar autenticado como admin",
+      });
+
+    let idEcoponto = req.params.id;
+    if (!idEcoponto) {
+      return res.status(400).json({
+        success: false,
+        error: "Indique um id de um ecoponto.",
+      });
+    }
+
+    let ecoponto = await Ecoponto.findById(idEcoponto);
+    if (!ecoponto) {
+      return res.status(404).json({
+        success: false,
+        error: "Ecoponto não encontrado.",
+      });
+    }
+
+    ecoponto.morada = req.body.morada;
+    await ecoponto.save();
+
+    res.status(200).json({
+      success: true,
+      msg: "Ecoponto editado com sucesso ",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      msg: err.message || "Algo correu mal, tente novamente mais tarde.",
+    });
+  }
+}
