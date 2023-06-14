@@ -22,34 +22,32 @@ let storage = multer.diskStorage({
     cb(null, "/tmp");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
 const multerUpload = multer({ storage: storage }).single("image");
 // ROUTES
-router 
-  .route("/")
-  .get(authController.verifyToken,userController.getAllUsers)
-router
-  .route("/registo")
-  .post(userController.create);
-router
-  .route("/login")
-  .post(userController.login);
+router.route("/").get(authController.verifyToken, userController.getAllUsers);
+router.route("/registo").post(userController.create);
+router.route("/login").post(userController.login);
 router
   .route("/:id")
-  .patch(authController.verifyToken,userController.updateUserById)
-  .get(authController.verifyToken,userController.getUser)
-  .delete(authController.verifyToken,userController.deleteUser);
+  .patch(authController.verifyToken, userController.updateUserById)
+  .get(authController.verifyToken, userController.getUser)
+  .delete(authController.verifyToken, userController.deleteUser);
+
+router
+  .route("/:id/badges")
+  .get(authController.verifyToken, userController.getBadgesUser);
 
 router
   .route("/:id/foto")
-  .patch(authController.verifyToken,multerUpload,userController.updateUserPhotoById)
-router
-  .route("/:id/badges")
-  .get(authController.verifyToken,userController.getBadgesUser)
-
+  .patch(
+    authController.verifyToken,
+    multerUpload,
+    userController.updateUserPhotoById
+  );
 
 router.all("*", function (req, res) {
   res.status(404).json({ message: "Users: what???" });
