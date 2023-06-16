@@ -16,7 +16,7 @@ afterAll(async () => {
 
 let token, token2, userID, adminID;
 describe("Registar utilizador", () => {
-  it("deve registar um utilizador", async () => {
+  test("deve registar um utilizador", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -24,11 +24,11 @@ describe("Registar utilizador", () => {
       confirmPassword: "teste",
     });
     expect(res.statusCode).toBe(201);
-  });
+  },10000);
 });
 
 describe("Login utilizador", () => {
-  it("deve fazer login", async () => {
+  test("deve fazer login", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -45,7 +45,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
-  it("deve fazer login como admin", async () => {
+  test("deve fazer login como admin", async () => {
     const res = await request(app).post("/utilizadores/login").send({
       nome: "Admin",
       password: "Esmad_2223",
@@ -59,7 +59,7 @@ describe("Login utilizador", () => {
 });
 
 describe("ver ecopontos", () => {
-  it("deve ver todos os ecopontos", async () => {
+  test("deve ver todos os ecopontos", async () => {
     const res = await request(app)
       .get("/ecopontos")
       .set("Authorization", `Bearer ${token}`);
@@ -67,9 +67,9 @@ describe("ver ecopontos", () => {
   });
 });
 
-let ecopontoID = "64883a0b8995a026b6e3a9f1";
+let ecopontoID = "646dd687cbc7e85364c204f5";
 describe("ver ecoponto por id", () => {
-  it("deve ver ecoponto por id", async () => {
+  test("deve ver ecoponto por id", async () => {
     const res = await request(app)
       .get(`/ecopontos/${ecopontoID}`)
       .set("Authorization", `Bearer ${token}`)
@@ -78,21 +78,8 @@ describe("ver ecoponto por id", () => {
 });
 
 
-
-/* describe('Validar ecoponto', () => {
-    it('deve validar um ecoponto', async () => {
-        const res = await request(app)
-            .put(`/ecopontos/${ecopontoID}`)
-            .set('Authorization', `Bearer ${token2}`)
-            .send({
-                ecopontoAprovado: true
-            });
-        expect(res.statusCode).toBe(200)
-    })
-}) */
-
 describe('Obter ecopontos por validar', () => {
-    it('deve obter ecopontos por validar', async () => {
+    test('deve obter ecopontos por validar', async () => {
         const res = await request(app)
             .get('/ecopontos/pendentes')
             .set('Authorization', `Bearer ${token2}`)
@@ -103,7 +90,7 @@ describe('Obter ecopontos por validar', () => {
 
 
 describe("delete User", () => {
-  it("deve eliminar um utilizador", async () => {
+  test("deve eliminar um utilizador", async () => {
     const res = await request(app)
       .delete(`/utilizadores/${userID}`)
       .set("Authorization", `Bearer ${token2}`);
@@ -111,5 +98,7 @@ describe("delete User", () => {
     expect(res.body.msg).toBe("Utilizador apagado com sucesso");
   });
 });
+
+
 
 

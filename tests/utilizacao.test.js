@@ -16,7 +16,7 @@ afterAll(async () => {
 
 let token, token2, userID, adminID;
 describe("Registar utilizador", () => {
-  it("deve registar um utilizador", async () => {
+  test("deve registar um utilizador", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -24,11 +24,11 @@ describe("Registar utilizador", () => {
       confirmPassword: "teste",
     });
     expect(res.statusCode).toBe(201);
-  });
+  },10000);
 });
 
 describe("Login utilizador", () => {
-  it("deve fazer login", async () => {
+  test("deve fazer login", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -45,7 +45,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
-  it("deve fazer login como admin", async () => {
+  test("deve fazer login como admin", async () => {
     const res = await request(app).post("/utilizadores/login").send({
       nome: "Admin",
       password: "Esmad_2223",
@@ -60,9 +60,9 @@ describe("Login utilizador", () => {
 
 
 
-let utilizacaoID = "64862591326daa67621afcac";
+let utilizacaoID = "648b863a4650c2ac61c03a81";
 describe("Valida uma utilização", () => {
-  it("deve validar uma utilização", async () => {
+  test("deve validar uma utilização", async () => {
     const res = await request(app)
       .put(`/utilizacao/${utilizacaoID}`)
       .set("Authorization", `Bearer ${token2}`)
@@ -80,13 +80,13 @@ describe("Valida uma utilização", () => {
 
 
 describe("Get utilizações pendentes",( )=>{
-    it("deve retornar as utilizações pendentes", async()=>{
+    test("deve retornar as utilizações pendentes", async()=>{
         const res = await request(app)
         .get(`/utilizacao/pendentes`)
         .set("Authorization", `Bearer ${token2}`);
         expect(res.statusCode).toBe(200);
     })
-    it("deve retornar erro de autenticação", async()=>{
+    test("deve retornar erro de autenticação", async()=>{
         const res = await request(app)
         .get(`/utilizacao/pendentes`)
         .set("Authorization", `Bearer ${token}`);
@@ -96,7 +96,7 @@ describe("Get utilizações pendentes",( )=>{
 
 
 describe("Get utilizações por utilizador",( )=>{
-    it("nenhuma utilização registada", async()=>{
+    test("nenhuma utilização registada", async()=>{
         const res = await request(app)
         .get(`/utilizacao/${userID}`)
         .set("Authorization", `Bearer ${token}`);
@@ -106,7 +106,7 @@ describe("Get utilizações por utilizador",( )=>{
 })
 
 describe("delete User", () => {
-  it("deve eliminar um utilizador", async () => {
+  test("deve eliminar um utilizador", async () => {
     const res = await request(app)
       .delete(`/utilizadores/${userID}`)
       .set("Authorization", `Bearer ${token2}`);

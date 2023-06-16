@@ -16,7 +16,7 @@ afterAll(async () => {
 
 let token, token2, userID, adminID;
 describe("Registar utilizador", () => {
-  it("deve registar um utilizador", async () => {
+  test("deve registar um utilizador", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -24,11 +24,11 @@ describe("Registar utilizador", () => {
       confirmPassword: "teste",
     });
     expect(res.statusCode).toBe(201);
-  });
+  },10000);
 });
 
 describe("Login utilizador", () => {
-  it("deve fazer login", async () => {
+  test("deve fazer login", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -45,7 +45,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
-  it("deve fazer login como admin", async () => {
+  test("deve fazer login como admin", async () => {
     const res = await request(app).post("/utilizadores/login").send({
       nome: "Admin",
       password: "Esmad_2223",
@@ -59,7 +59,7 @@ describe("Login utilizador", () => {
 });
 
 describe("get items store Admin", () => {
-  it("should return all items", async () => {
+  test("should return all items", async () => {
     const res = await request(app)
       .get("/loja/admin")
       .set("Authorization", `Bearer ${token2}`);
@@ -78,7 +78,7 @@ describe("get items store Admin", () => {
 });
 
 describe("get items store ", () => {
-  it("should return all items", async () => {
+  test("should return all items", async () => {
     const res = await request(app)
       .get("/loja")
       .set("Authorization", `Bearer ${token}`);
@@ -91,7 +91,7 @@ describe("get items store ", () => {
 let itemID= "646885b2efe016ae6622707d"
 
 describe("update item", () => {
-    it("should update item", async () => {
+    test("should update item", async () => {
         const res = await request(app)
             .patch(`/loja/${itemID}`)
             .set("Authorization", `Bearer ${token2}`)
@@ -102,7 +102,7 @@ describe("update item", () => {
         expect(res.body.success).toBe(true);
         expect(res.body.msg).toBe("Item atualizado com sucesso");
     });
-    it("should return error 403", async () => {
+    test("should return error 403", async () => {
         const res = await request(app)
             .patch(`/loja/${itemID}`)
             .set("Authorization", `Bearer ${token}`)
@@ -117,7 +117,7 @@ describe("update item", () => {
 
 
 describe("delete User", () => {
-  it("deve eliminar um utilizador", async () => {
+  test("deve eliminar um utilizador", async () => {
     const res = await request(app)
       .delete(`/utilizadores/${userID}`)
       .set("Authorization", `Bearer ${token2}`);

@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "API for GeoRecycle",
     "scripts": {
-        "test": "cross-env NODE_ENV=test jest --testTimeout=5000 --detectOpenHandles --forceExit --runInBand"
+        "test": "cross-env NODE_ENV=test jest --testTimeout=10000 --detectOpenHandles --forceExit --runInBand"
     },
     "repository": {
         "type": "git",

@@ -14,18 +14,18 @@ afterAll(async () => {
   server.close();
 });
 
-let token, token2,userID,adminID
+let token, token2,userID,admintest
 describe("Registar utilizador", () => {
-  it("deve registar um utilizador", async () => {
+  test("deve registar um utilizador", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
       password: "teste",
       confirmPassword: "teste",
-    });
+    }, 10000);
     expect(res.statusCode).toBe(201);
   });
-  it("erro de confirmação de password", async () => {
+  test("erro de confirmação de password", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -35,7 +35,7 @@ describe("Registar utilizador", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toBe("Indique uma confirmação da palavra-passe");
   });
-  it("erro de passwords nao coincidem", async () => {
+  test("erro de passwords nao coincidem", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -47,7 +47,7 @@ describe("Registar utilizador", () => {
       "A palavra-passe e a confirmação da palavra-passe não são iguais"
     );
   });
-  it("erro de nome nao pode estar vazio", async () => {
+  test("erro de nome nao pode estar vazio", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       email: "teste@gmail.com",
       password: "teste",
@@ -55,7 +55,7 @@ describe("Registar utilizador", () => {
     });
     expect(res.statusCode).toBe(400);
   });
-  it("erro de password nao pode estar vazio", async () => {
+  test("erro de password nao pode estar vazio", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -67,7 +67,7 @@ describe("Registar utilizador", () => {
 });
 
 describe("Login utilizador", () => {
-  it("deve fazer login", async () => {
+  test("deve fazer login", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -84,7 +84,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
-  it("deve fazer login como admin", async () => {
+  test("deve fazer login como admin", async () => {
     const res = await request(app).post("/utilizadores/login").send({
       nome: "Admin",
       password: "Esmad_2223",
@@ -95,7 +95,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
-  it("erro de password incorreta", async () => {
+  test("erro de password incorreta", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -109,7 +109,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(401);
     expect(res.body.message).toBe("Password inválida");
   });
-  it("erro de nome incorreto", async () => {
+  test("erro de nome incorreto", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -123,7 +123,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(404);
     expect(res.body.message).toBe("Utilizador não encontrado");
   });
-  it("erro de campos por preencher", async () => {
+  test("erro de campos por preencher", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -140,13 +140,13 @@ describe("Login utilizador", () => {
 });
 
 describe("obter todos os utilizadores", () => {
-  it("deve obter todos os utilizadores", async () => {
+  test("deve obter todos os utilizadores", async () => {
     const res = await request(app)
       .get("/utilizadores")
       .set("Authorization", `Bearer ${token2}`);
     expect(res.statusCode).toBe(200);
   });
-  it("deve dar erro de autorização", async () => {
+  test("deve dar erro de autorização", async () => {
     const res = await request(app)
       .get("/utilizadores")
       .set("Authorization", `Bearer ${token}`);
@@ -155,7 +155,7 @@ describe("obter todos os utilizadores", () => {
 });
 
 describe('updateUserById', () => {
-  it('deve atualizar um utilizador', async()=>{
+  test('deve atualizar um utilizador', async()=>{
     const res = await request(app)
       .patch(`/utilizadores/${userID}`)
       .set("Authorization", `Bearer ${token}`)
@@ -167,7 +167,7 @@ describe('updateUserById', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.message).toBe("Utilizador atualizado com sucesso!")
   })
-  it('deve dar erro de password', async()=>{
+  test('deve dar erro de password', async()=>{
     const res = await request(app)
       .patch(`/utilizadores/${userID}`)
       .set("Authorization", `Bearer ${token}`)
@@ -181,7 +181,7 @@ describe('updateUserById', () => {
 })
   
 describe('delete User', () => {
-  it('deve dar erro de autorização', async()=>{
+  test('deve dar erro de autorização', async()=>{
     const res = await request(app)
       .delete(`/utilizadores/${userID}`)
       .set("Authorization", `Bearer ${token}`)
@@ -194,7 +194,7 @@ describe('delete User', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body.msg).toBe("Utilizador apagado com sucesso")
   })
-  it('deve dar erro de utilizador não encontrado', async()=>{
+  test('deve dar erro de utilizador não encontrado', async()=>{
     const res = await request(app)
       .delete(`/utilizadores/${userID}`)
       .set("Authorization", `Bearer ${token2}`)

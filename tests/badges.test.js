@@ -16,7 +16,7 @@ afterAll(async () => {
 
 let token, token2, userID, adminID;
 describe("Registar utilizador", () => {
-  it("deve registar um utilizador", async () => {
+  test("deve registar um utilizador", async () => {
     const res = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -24,11 +24,11 @@ describe("Registar utilizador", () => {
       confirmPassword: "teste",
     });
     expect(res.statusCode).toBe(201);
-  });
+  },10000);
 });
 
 describe("Login utilizador", () => {
-  it("deve fazer login", async () => {
+  test("deve fazer login", async () => {
     const data = await request(app).post("/utilizadores/registo").send({
       nome: "Teste",
       email: "teste@gmail.com",
@@ -45,7 +45,7 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
-  it("deve fazer login como admin", async () => {
+  test("deve fazer login como admin", async () => {
     const res = await request(app).post("/utilizadores/login").send({
       nome: "Admin",
       password: "Esmad_2223",
@@ -56,30 +56,17 @@ describe("Login utilizador", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Login efetuado com sucesso");
   });
-});
-/* NOT WORKING */
-/* let badgeID = "6453da2688725a0e466c1064";
-describe("editar badge", () => {
-    it("deve editar uma badge", async () => {
-        const res = await request(app)
-        .put(`/badges/${badgeID}`)
-        .set("Authorization", `Bearer ${token2}`)
-        .send({
-            nome: "Utilizador Regularrr",
-        });
-        expect(res.body.msg).toBe("Badge atualizada com sucesso");
-    });
-}); */
+})
 
 describe("get all badges", () => {
-    it("deve retornar todas as badges", async () => {
+    test("deve retornar todas as badges", async () => {
         const res = await request(app)
             .get("/badges")
             .set("Authorization", `Bearer ${token2}`);
         expect(res.statusCode).toBe(200);
         expect(res.body.msg).toBe("Badges encontradas");
     });
-    it("deve dar erro de autenticação", async () => {
+    test("deve dar erro de autenticação", async () => {
         const res = await request(app)
             .get("/badges")
             .set("Authorization", `Bearer ${token}`);
@@ -93,7 +80,7 @@ describe("get all badges", () => {
 
 
 describe("delete User", () => {
-    it("deve eliminar um utilizador", async () => {
+    test("deve eliminar um utilizador", async () => {
       const res = await request(app)
         .delete(`/utilizadores/${userID}`)
         .set("Authorization", `Bearer ${token2}`);
