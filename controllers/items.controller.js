@@ -30,7 +30,7 @@ exports.getStoreItemsAdmin = async (req, res) => {
 //Ver todos os items da loja utilizador
 exports.getStoreItemsUser = async (req, res) => {
   try {
-    let items = await Items.find({},{nome:1,preco:1,foto:1,_id:0});
+    let items = await Items.find({},{nome:1,preco:1,foto:1,_id:1});
     res.status(200).json({
       success: true,
       msg: "Items retornados com sucesso",
